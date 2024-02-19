@@ -1,19 +1,19 @@
 using UnityEngine;
 using MyGame.WeaponSystem;
 using UnityEngine.InputSystem;
-namespace MyGame.Player
+namespace MyGame.PlayerSystem
 {
 
     public class PlayerController : MonoBehaviour
     {
         private Rigidbody2D rigi;
-        private const int speed = 5;
-        [SerializeField] private Weapon[] allWeapons = new Weapon[5];
-        [SerializeField] private Weapon[] weapons = new Weapon[2];
+        private PlayerState playerState;
         private Weapon currentWeapon;
         private void Awake()
         {
             rigi = GetComponent<Rigidbody2D>();
+            playerState = GetComponent<PlayerState>();
+
         }
         private void Start()
         {
@@ -28,7 +28,7 @@ namespace MyGame.Player
         // Update is called once per frame
         void Update()
         {
-            rigi.velocity = GameInput.Instance.GetMovementInput() * speed;
+            rigi.velocity = GameInput.Instance.GetMovementInput() * playerState.speed;
         }
         public void ChangeWeapon(int index, WeaponType type)
         {

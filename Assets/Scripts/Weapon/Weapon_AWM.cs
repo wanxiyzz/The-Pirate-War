@@ -1,3 +1,4 @@
+using UnityEngine;
 namespace MyGame.WeaponSystem
 {
     public class Weapon_AWM : Weapon
@@ -8,11 +9,12 @@ namespace MyGame.WeaponSystem
             currentBullets = 5;
             maxBullets = 5;
             damage = 40;
-            bufferTime = 1f;
+            bufferTime = 1.5f;
         }
-        protected override void InstantiateAttack()
+        protected override void InstantiateAttack(Vector3 attackPos, Vector3 attackDir)
         {
-
+            Bullet bullet = BulletPool.Instance.GetOwnSideBullet(attackPos, transform.localRotation);
+            bullet.Init(damage, attackDir);
         }
     }
 }
