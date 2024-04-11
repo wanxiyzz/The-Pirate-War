@@ -8,6 +8,7 @@ namespace MyGame.PlayerSystem
     {
         PlayerInputActions playerInputActions;
         public event Action<InputAction.CallbackContext> InteractAction;
+        public event Action<Vector2> MovementAction;
         protected override void Awake()
         {
             base.Awake();
@@ -15,7 +16,10 @@ namespace MyGame.PlayerSystem
             playerInputActions.Player.Enable();
             playerInputActions.Player.Interact.performed += Interact;
         }
-
+        private void FixedUpdate()
+        {
+            MovementAction?.Invoke(GetMovementInput());
+        }
         private void Interact(InputAction.CallbackContext context)
         {
             InteractAction?.Invoke(context);

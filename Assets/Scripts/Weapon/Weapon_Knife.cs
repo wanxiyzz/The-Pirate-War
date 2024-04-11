@@ -11,7 +11,18 @@ namespace MyGame.WeaponSystem
         }
         protected override void Aim()
         {
-            if (canAttack)
+            mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            direction = (mousePos - (Vector2)transform.position).normalized;
+            transform.right = direction;
+            if (!canAttack)
+            {
+                currentBufferTime -= Time.deltaTime;
+                if (currentBufferTime < 0)
+                {
+                    canAttack = true;
+                }
+            }
+            else
             {
                 if (Input.GetMouseButtonDown(0) && Input.GetMouseButtonDown(1))
                 {

@@ -1,34 +1,33 @@
 using UnityEngine;
+using System;
 namespace MyGame.PlayerSystem
 {
+    [Serializable]
     public class PlayerState : MonoBehaviour
     {
-        private int maxHealth = 100;
-        private int currentHealth = 0;
-        private bool isDeath;
-        public int speed = 5;
+        public Vector2 position;
+        public Vector2 plsyerDir;
+        public int currentHealth = 0;
+        public int playerAction;
         private void Awake()
         {
-            currentHealth = maxHealth;
-            isDeath = false;
+            currentHealth = Setting.maxHealth;
         }
         public void ChangeHealth(int amount)
         {
             currentHealth += amount;
-            if (currentHealth > maxHealth)
+            if (currentHealth > Setting.maxHealth)
             {
-                currentHealth = maxHealth;
+                currentHealth = Setting.maxHealth;
             }
             else if (currentHealth <= 0)
             {
-                currentHealth = 0;
-                isDeath = true;
+                Death();
             }
         }
-        public void ChangeSpeed(int amount)
+        public void Death()
         {
-            speed = amount;
+            currentHealth = 0;
         }
-
     }
 }

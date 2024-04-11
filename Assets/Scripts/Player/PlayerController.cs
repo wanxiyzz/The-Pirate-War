@@ -1,5 +1,4 @@
 using UnityEngine;
-using MyGame.WeaponSystem;
 using UnityEngine.InputSystem;
 namespace MyGame.PlayerSystem
 {
@@ -8,30 +7,98 @@ namespace MyGame.PlayerSystem
     {
         private Rigidbody2D rigi;
         private PlayerState playerState;
-        private Weapon currentWeapon;
-        private void Awake()
+        [SerializeField] private bool isMoveing;
+        private int speed = 5;
+        //Ship
+        [SerializeField] private Rigidbody2D shipRigi;
+        private Vector2 shipPos;
+        [SerializeField] private bool isBoardShip;
+        private bool isInteract;
+        [SerializeField] Transform interactTrans;
+        private void Start()
         {
             rigi = GetComponent<Rigidbody2D>();
             playerState = GetComponent<PlayerState>();
-
+            EventHandler.PlayerInetractive += Interact;
+            BoardShip(shipRigi);
         }
-        private void Start()
+        private void Interact(bool isInteract)
         {
-            GameInput.Instance.InteractAction += Interact;
+            this.isInteract = isInteract;
         }
-
-        private void Interact(InputAction.CallbackContext context)
-        {
-            Debug.Log("Interact");
-        }
-
-        // Update is called once per frame
         void Update()
         {
-            rigi.velocity = GameInput.Instance.GetMovementInput() * playerState.speed;
+            PlayerInputAction();
         }
-        public void ChangeWeapon(int index, WeaponType type)
+        private void LateUpdate()
         {
+            if (isBoardShip)
+            {
+                if (isMoveing)
+                {
+                    shipPos = transform.localPosition;
+                }
+                else
+                {
+                    transform.localPosition = shipPos;
+                }
+            }
+            AdjustPlayerInteractPos();
+        }
+        private void FixedUpdate()
+        {
+        }
+        public void PlayerEnterInteract(Transform interactTrans)
+        {
+            this.interactTrans = interactTrans;
+        }
+        public void AdjustPlayerInteractPos()
+        {
+            if (interactTrans != null)
+            {
+                if (isBoardShip)
+                {
+                    transform.position = interactTrans.position;
+                    transform.rotation = interactTrans.rotation;
+                }
+                Debug.Log(shipPos);
+                Debug.Log(transform.position);
+            }
+        }
+        public void PlayerInputAction()
+        {
+            if (isInteract)
+            {
+                rigi.velocity = isBoardShip ? shipRigi.velocity : Vector2.zero;
+                // if (isBoardShip)
+                // {
+                //     rigi.velocity = shipRigi.velocity;
+                // }
+                // else
+                // {
+                //     rigi.velocity = Vector2.zero;
+                // }
+                return;
+            }
+            Vector2 playerVelocity = GameInput.Instance.GetMovementInput() * speed;
+            isMoveing = playerVelocity != Vector2.zero;
+            if (isBoardShip)
+            {
+                playerVelocity += shipRigi.velocity;
+            }
+            rigi.velocity = playerVelocity;
+        }
+        public void BoardShip(Rigidbody2D shipRigi)
+        {
+            isBoardShip = true;
+            this.shipRigi = shipRigi;
+            transform.parent = shipRigi.transform;
+        }
+        public void LeaveShip()
+        {
+            isBoardShip = false;
+            shipRigi = null;
+            transform.parent = null;
         }
     }
 }

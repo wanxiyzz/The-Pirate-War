@@ -16,7 +16,6 @@ namespace MyGame.WeaponSystem
         protected Vector2 mousePos;
 
         protected Vector2 direction;
-        protected float timer;
         // private Animator animator;
         protected void Start()
         {
