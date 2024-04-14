@@ -12,32 +12,29 @@ namespace MyGame.ShipSystem
         public void EnterInteract()
         {
             GameInput.Instance.MovementAction += InputInteract;
-            Debug.Log("交互了");
             UIManager.Instance.EnterHelm(helmRotate);
             GameManager.Instance.player.PlayerEnterInteract(takeHelmPos);
         }
 
         public void EnterWaitInteract()
         {
-            Debug.Log("进入了");
         }
 
         public void ExitInteract()
         {
-            Debug.Log("退出交互了");
+            UIManager.Instance.ExitHelm();
             GameInput.Instance.MovementAction -= InputInteract;
         }
 
-        public void ExitrWaitInteract()
+        public void ExitWaitInteract()
         {
-            Debug.Log("退出了");
         }
 
         public void InputInteract(Vector2 input)
         {
             helmRotate -= input.x * helmRotateSpeed * Time.deltaTime;
             helmRotate = Mathf.Clamp(helmRotate, -helmRotateSpeedMax, helmRotateSpeedMax);
-            shipController.AdjustTorque(helmRotate);
+            shipController.AdjustAngular(helmRotate);
             UIManager.Instance.UpdateHeml(helmRotate);
 
         }

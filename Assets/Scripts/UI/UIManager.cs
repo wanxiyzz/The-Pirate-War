@@ -20,6 +20,10 @@ public class UIManager : Singleton<UIManager>
         hemlText.gameObject.SetActive(true);
         UpdateHeml(helmRotate);
     }
+    public void ExitHelm()
+    {
+        hemlText.gameObject.SetActive(false);
+    }
     public void UpdateHeml(float helmRotate)
     {
         hemlText.text = "舵角：" + helmRotate.ToString("f2");

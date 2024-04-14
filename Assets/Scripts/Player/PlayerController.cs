@@ -12,8 +12,8 @@ namespace MyGame.PlayerSystem
         //Ship
         [SerializeField] private Rigidbody2D shipRigi;
         private Vector2 shipPos;
-        [SerializeField] private bool isBoardShip;
-        private bool isInteract;
+        public bool isBoardShip; //是否在船上
+        [SerializeField] private bool isInteract;
         [SerializeField] Transform interactTrans;
         private void Start()
         {
@@ -34,7 +34,7 @@ namespace MyGame.PlayerSystem
         {
             if (isBoardShip)
             {
-                if (isMoveing)
+                if (isMoveing || isInteract)
                 {
                     shipPos = transform.localPosition;
                 }
@@ -52,17 +52,16 @@ namespace MyGame.PlayerSystem
         {
             this.interactTrans = interactTrans;
         }
-        public void AdjustPlayerInteractPos()
+        private void AdjustPlayerInteractPos()
         {
             if (interactTrans != null)
             {
-                if (isBoardShip)
+                if (isBoardShip && isInteract)
                 {
                     transform.position = interactTrans.position;
                     transform.rotation = interactTrans.rotation;
                 }
-                Debug.Log(shipPos);
-                Debug.Log(transform.position);
+
             }
         }
         public void PlayerInputAction()

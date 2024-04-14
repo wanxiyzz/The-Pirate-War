@@ -7,8 +7,8 @@ namespace MyGame.ShipSystem
         private ShipState shipState = new ShipState();
 
         [SerializeField] private float shipSpeed = 5;
-        [SerializeField] private float maxAngularVelocity;//最大扭矩
-        [SerializeField] private float angularVelocity;//当前扭矩
+        [SerializeField] private float maxAngularVelocity;//最大角速度
+        [SerializeField] private float angularVelocity;//当前角速度
         private Rigidbody2D rigi;
         void Start()
         {
@@ -23,10 +23,10 @@ namespace MyGame.ShipSystem
             Swerve(angularVelocity);
         }
         /// <summary>
-        /// 使用舵来控制扭矩
+        /// 使用舵来控制角速度
         /// </summary>
         /// <param name="RudderNum">旋转百分比 正数左 负数右</param>
-        public void AdjustTorque(float RudderNum)
+        public void AdjustAngular(float RudderNum)
         {
             angularVelocity = maxAngularVelocity * RudderNum;
         }

@@ -29,7 +29,7 @@ namespace MyGame.PlayerSystem
                 interactables.Remove(interactable);
                 if (interactable == currentInteractable)
                 {
-                    currentInteractable.ExitrWaitInteract();
+                    currentInteractable.ExitWaitInteract();
                     if (interactables.Count > 0)
                     {
                         currentInteractable = interactables[interactables.Count - 1];

@@ -86,13 +86,5 @@ namespace MyGame.PlayerSystem
             Debug.Log("拿出武器");
             currentWeapon.gameObject.SetActive(true);
         }
-        public void PickUpWeapon()
-        {
-            currentWeapon.gameObject.SetActive(false);
-        }
-        public void PickOnWeapon()
-        {
-            currentWeapon.gameObject.SetActive(true);
-        }
     }
 }

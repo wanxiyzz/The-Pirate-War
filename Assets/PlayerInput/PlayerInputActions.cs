@@ -71,6 +71,15 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Loading"",
+                    ""type"": ""Button"",
+                    ""id"": ""3e4becd7-9e98-443b-886c-66412fca48b3"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -216,6 +225,28 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""action"": ""ChangeLastWeapon"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ce093633-b028-4c7b-9ba2-b8a67325ea85"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Loading"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2f8b3701-ccd8-4e9e-9878-dec79a8264c4"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Loading"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -229,6 +260,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
         m_Player_ChangeLastWeapon = m_Player.FindAction("ChangeLastWeapon", throwIfNotFound: true);
         m_Player_Skill = m_Player.FindAction("Skill", throwIfNotFound: true);
+        m_Player_Loading = m_Player.FindAction("Loading", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -293,6 +325,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Attack;
     private readonly InputAction m_Player_ChangeLastWeapon;
     private readonly InputAction m_Player_Skill;
+    private readonly InputAction m_Player_Loading;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -302,6 +335,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         public InputAction @Attack => m_Wrapper.m_Player_Attack;
         public InputAction @ChangeLastWeapon => m_Wrapper.m_Player_ChangeLastWeapon;
         public InputAction @Skill => m_Wrapper.m_Player_Skill;
+        public InputAction @Loading => m_Wrapper.m_Player_Loading;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -326,6 +360,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Skill.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSkill;
                 @Skill.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSkill;
                 @Skill.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSkill;
+                @Loading.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLoading;
+                @Loading.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLoading;
+                @Loading.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLoading;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -345,6 +382,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Skill.started += instance.OnSkill;
                 @Skill.performed += instance.OnSkill;
                 @Skill.canceled += instance.OnSkill;
+                @Loading.started += instance.OnLoading;
+                @Loading.performed += instance.OnLoading;
+                @Loading.canceled += instance.OnLoading;
             }
         }
     }
@@ -356,5 +396,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         void OnAttack(InputAction.CallbackContext context);
         void OnChangeLastWeapon(InputAction.CallbackContext context);
         void OnSkill(InputAction.CallbackContext context);
+        void OnLoading(InputAction.CallbackContext context);
     }
 }
