@@ -1,10 +1,11 @@
 using UnityEngine;
+using MyGame.InputSystem;
 namespace MyGame.WeaponSystem
 {
     public class Weapon : MonoBehaviour
     {
-        protected WeaponType weaponType = WeaponType.Knife;
-        protected int maxBullets = 0;
+        [SerializeField] protected WeaponType weaponType = WeaponType.Knife;
+        [SerializeField] protected int maxBullets = 0;
         public int currentBullets = 0;
         public int damage = 0;
         public float bufferTime = 0;
@@ -17,7 +18,7 @@ namespace MyGame.WeaponSystem
 
         protected Vector2 direction;
         // private Animator animator;
-        protected void Start()
+        protected void Awake()
         {
             // animator = GetComponent<Animator>();
             muzzlePos = transform.Find("Muzzle");
@@ -26,7 +27,14 @@ namespace MyGame.WeaponSystem
         {
             Aim();
         }
-
+        protected void OnEnable()
+        {
+            GameInput.Instance.AttackAction += WeaponAttack;
+        }
+        protected void OnDisable()
+        {
+            GameInput.Instance.AttackAction -= WeaponAttack;
+        }
         protected virtual void Aim()
         {
             mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -39,10 +47,6 @@ namespace MyGame.WeaponSystem
                 {
                     canAttack = true;
                 }
-            }
-            if (Input.GetMouseButtonDown(0))
-            {
-                WeaponAttack();
             }
         }
 

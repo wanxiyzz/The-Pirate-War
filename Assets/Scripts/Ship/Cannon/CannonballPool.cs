@@ -7,9 +7,9 @@ namespace MyGame.ShipSystem.Cannon
     {
         [SerializeField] private ObjectPool<Cannonball> cannonballPool;
 
-        public void Initialize()
+        protected override void Awake()
         {
-            // 初始化对象池
+            base.Awake();
             cannonballPool.Initialize(transform);
         }
         public void GetCannonball(Vector2 velocity, Vector2 pos)

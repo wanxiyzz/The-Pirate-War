@@ -1,5 +1,7 @@
 using UnityEngine;
 using MyGame.WeaponSystem;
+using MyGame.InputSystem;
+
 namespace MyGame.PlayerSystem
 {
     public class PlayerWeapon : MonoBehaviour
@@ -8,19 +10,6 @@ namespace MyGame.PlayerSystem
         [SerializeField] private Weapon[] carryWeapon;
         [SerializeField] private Weapon currentWeapon;
         private int weaponIndex = 0;
-        private void Awake()
-        {
-            // TODO:测试完删除
-            allWeapons = GetComponentsInChildren<Weapon>();
-            carryWeapon[0] = allWeapons[0];
-            carryWeapon[1] = allWeapons[1];
-            for (int i = 1; i < allWeapons.Length; i++)
-            {
-                allWeapons[i].gameObject.SetActive(false);
-            }
-            EventHandler.PlayerInetractive += OnPlayerInetractive;
-        }
-
         private void OnPlayerInetractive(bool isInteractive)
         {
             if (isInteractive) PutWeapon();
@@ -29,6 +18,17 @@ namespace MyGame.PlayerSystem
 
         void Start()
         {
+            // // TODO:测试完删除
+            allWeapons = GetComponentsInChildren<Weapon>();
+            carryWeapon[0] = allWeapons[0];
+            carryWeapon[1] = allWeapons[1];
+            for (int i = 1; i < allWeapons.Length; i++)
+            {
+                allWeapons[i].gameObject.SetActive(false);
+            }
+            EventHandler.PlayerInetractive += OnPlayerInetractive;
+
+            GameInput.Instance.ChangeLastWeaponAction += SwitchLastWeapon;
             currentWeapon = carryWeapon[weaponIndex];
         }
         /// <summary>

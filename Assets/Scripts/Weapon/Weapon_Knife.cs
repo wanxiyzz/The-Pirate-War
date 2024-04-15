@@ -3,12 +3,6 @@ namespace MyGame.WeaponSystem
 {
     public class Weapon_Knife : Weapon
     {
-        private void Awake()
-        {
-            weaponType = WeaponType.Knife;
-            bufferTime = 0.5f;
-            damage = 20;
-        }
         protected override void Aim()
         {
             mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);

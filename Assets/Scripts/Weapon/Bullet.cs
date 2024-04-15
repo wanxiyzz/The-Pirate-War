@@ -10,7 +10,7 @@ namespace MyGame.WeaponSystem
         public void Init(int damage, Vector2 dir)
         {
             this.damage = damage;
-            GetComponent<Rigidbody2D>().velocity = dir * 80;
+            GetComponent<Rigidbody2D>().velocity = dir * 120;
             StartCoroutine(Eliminate());
         }
         private void OnTriggerEnter2D(Collider2D other)

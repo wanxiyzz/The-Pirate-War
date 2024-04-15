@@ -1,3 +1,4 @@
+using MyGame.InputSystem;
 using UnityEngine;
 using UnityEngine.InputSystem;
 namespace MyGame.PlayerSystem

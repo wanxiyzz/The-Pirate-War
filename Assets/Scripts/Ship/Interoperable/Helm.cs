@@ -1,5 +1,6 @@
 using UnityEngine;
-using MyGame.PlayerSystem;
+using MyGame.InputSystem;
+
 namespace MyGame.ShipSystem
 {
     public class Helm : MonoBehaviour, Iinteractable

@@ -6,6 +6,8 @@ using MyGame.PlayerSystem;
 public class GameManager : Singleton<GameManager>
 {
     public PlayerController player;
+
+
     void Start()
     {
 

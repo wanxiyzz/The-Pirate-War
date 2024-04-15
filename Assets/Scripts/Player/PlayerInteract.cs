@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using MyGame.InputSystem;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -39,7 +40,7 @@ namespace MyGame.PlayerSystem
                 }
             }
         }
-        private void Interact(InputAction.CallbackContext context)
+        private void Interact()
         {
             isInteractive = !isInteractive;
             Debug.Log(isInteractive);
