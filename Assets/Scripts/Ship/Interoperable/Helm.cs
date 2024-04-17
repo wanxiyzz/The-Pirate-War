@@ -1,5 +1,6 @@
 using UnityEngine;
 using MyGame.InputSystem;
+using MyGame.UISystem;
 
 namespace MyGame.ShipSystem
 {
@@ -10,6 +11,9 @@ namespace MyGame.ShipSystem
         [SerializeField] private float helmRotate = 0;
         [SerializeField] private float helmRotateSpeed = 0.5f;
         private float helmRotateSpeedMax = 1;
+
+        public string Name => "船舵";
+
         public void EnterInteract()
         {
             GameInput.Instance.MovementAction += InputInteract;

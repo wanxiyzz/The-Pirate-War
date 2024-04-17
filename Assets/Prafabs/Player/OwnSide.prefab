@@ -95,7 +95,6 @@ GameObject:
   - component: {fileID: 5878983320714814007}
   - component: {fileID: 5878983320714814004}
   - component: {fileID: 5878983320714813994}
-  - component: {fileID: 6861752951602448608}
   m_Layer: 6
   m_Name: OwnSide
   m_TagString: OwnSide
@@ -166,16 +165,3 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &6861752951602448608
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5878983320714814006}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 92f33e3b0967a324eab0bc16b54c8f7e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  type: 0

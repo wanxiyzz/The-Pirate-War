@@ -1,5 +1,4 @@
 using System;
-using UnityEngine;
 
 public class EventHandler
 {
@@ -8,9 +7,10 @@ public class EventHandler
     {
         PlayerInetractive?.Invoke(value);
     }
-    public static event Action<Vector2> MoveInput;
-    public static void CallMoveInput(Vector2 value)
+    public static event Action<int, int> ChangeWeaponUI;
+    public static void CallChangeWeaponUI(int tableIndex, int bagIndex)
     {
-        MoveInput?.Invoke(value);
+        ChangeWeaponUI?.Invoke(tableIndex, bagIndex);
     }
+    // Add other events as needed
 }

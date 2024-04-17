@@ -3,7 +3,7 @@ using System;
 namespace MyGame.PlayerSystem
 {
     [Serializable]
-    public class PlayerState : MonoBehaviour
+    public class PlayerState
     {
         public Vector2 position;
         public Vector2 plsyerDir;

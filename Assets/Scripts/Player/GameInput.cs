@@ -10,7 +10,7 @@ namespace MyGame.InputSystem
         public event Action InteractAction;
         public event Action<Vector2> MovementAction;
         public event Action ChangeLastWeaponAction;
-        public event Action AttackAction;
+        public event Action UseItemAction;
         protected override void Awake()
         {
             base.Awake();
@@ -18,7 +18,7 @@ namespace MyGame.InputSystem
             playerInputActions.Player.Enable();
             playerInputActions.Player.Interact.performed += Interact;
             playerInputActions.Player.ChangeLastWeapon.performed += ChangeLastWeapon;
-            playerInputActions.Player.Attack.performed += Attack;
+            playerInputActions.Player.UseItem.performed += UseItem;
         }
 
         private void ChangeLastWeapon(InputAction.CallbackContext context)
@@ -34,9 +34,9 @@ namespace MyGame.InputSystem
         {
             InteractAction?.Invoke();
         }
-        private void Attack(InputAction.CallbackContext context)
+        private void UseItem(InputAction.CallbackContext context)
         {
-            AttackAction?.Invoke();
+            UseItemAction?.Invoke();
         }
         public Vector2 GetMovementInput()
         {

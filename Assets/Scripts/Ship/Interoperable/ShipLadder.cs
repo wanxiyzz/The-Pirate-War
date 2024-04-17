@@ -5,6 +5,8 @@ namespace MyGame.ShipSystem
 {
     public class ShipLadder : MonoBehaviour, Iinteractable
     {
+        public string Name => "船梯";
+
         public void EnterInteract()
         {
             GameManager.Instance.player.PlayerEnterInteract(null);

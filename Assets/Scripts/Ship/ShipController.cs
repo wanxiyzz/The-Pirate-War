@@ -10,6 +10,7 @@ namespace MyGame.ShipSystem
         [SerializeField] private float maxAngularVelocity;//最大角速度
         [SerializeField] private float angularVelocity;//当前角速度
         private Rigidbody2D rigi;
+        public Vector2 Velocity => rigi.velocity;
         void Start()
         {
             rigi = GetComponent<Rigidbody2D>();
@@ -58,6 +59,11 @@ namespace MyGame.ShipSystem
         /// </summary>
         public void HoistAnchor()
         {
+        }
+        public void TakeCannonball(Vector2 position)
+        {
+            Debug.Log("打中了");
+            WoodClipPool.Instance.PrepareObject(position);
         }
 
     }

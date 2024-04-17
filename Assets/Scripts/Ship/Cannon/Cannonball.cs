@@ -12,9 +12,13 @@ namespace MyGame.ShipSystem.Cannon
 
         }
 
-        private void OnCollisionEnter2D(Collision2D other)
+        private void OnTriggerEnter2D(Collider2D other)
         {
-            //animation
+            Debug.Log(other.gameObject.name);
+            if (other.gameObject.CompareTag("Ship"))
+            {
+                other.GetComponent<ShipController>().TakeCannonball(transform.position);
+            }
             gameObject.SetActive(false);
         }
     }

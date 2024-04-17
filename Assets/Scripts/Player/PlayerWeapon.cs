@@ -1,44 +1,54 @@
 using UnityEngine;
-using MyGame.WeaponSystem;
 using MyGame.InputSystem;
+using MyGame.HandheldableSystem.WeaponSystem;
 
 namespace MyGame.PlayerSystem
 {
-    public class PlayerWeapon : MonoBehaviour
+    public class PlayerWeapon : Singleton<PlayerWeapon>
     {
         [SerializeField] private Weapon[] allWeapons;
-        [SerializeField] private Weapon[] carryWeapon;
-        [SerializeField] private Weapon currentWeapon;
-        private int weaponIndex = 0;
+        public Weapon[] carryWeapons;
+        public Weapon currentWeapon;
+        [SerializeField] private int weaponIndex = 0;
+        public int canTackWeaponNum = 2;
         private void OnPlayerInetractive(bool isInteractive)
         {
             if (isInteractive) PutWeapon();
             else TakeoutWeapon();
         }
 
-        void Start()
+        protected override void Awake()
         {
-            // // TODO:测试完删除
+            base.Awake();
             allWeapons = GetComponentsInChildren<Weapon>();
-            carryWeapon[0] = allWeapons[0];
-            carryWeapon[1] = allWeapons[1];
+            carryWeapons = new Weapon[canTackWeaponNum];
+            for (int i = 0; i < canTackWeaponNum; i++)
+            {
+                carryWeapons[i] = allWeapons[i];
+            }
             for (int i = 1; i < allWeapons.Length; i++)
             {
                 allWeapons[i].gameObject.SetActive(false);
             }
             EventHandler.PlayerInetractive += OnPlayerInetractive;
-
             GameInput.Instance.ChangeLastWeaponAction += SwitchLastWeapon;
-            currentWeapon = carryWeapon[weaponIndex];
+
+            currentWeapon = carryWeapons[weaponIndex];
         }
         /// <summary>
         /// 从武器盒中切武器
         /// </summary>
         public void ChangeWeapon(WeaponType weaponType, int index)
         {
-            carryWeapon[index] = allWeapons[(int)weaponType];
+            if (currentWeapon == carryWeapons[index])
+            {
+                Debug.Log("替换当前的武器");
+                currentWeapon.gameObject.SetActive(false);
+                currentWeapon = allWeapons[(int)weaponType];
+                currentWeapon.gameObject.SetActive(true);
+            }
+            carryWeapons[index] = allWeapons[(int)weaponType];
             currentWeapon.Init();
-            currentWeapon.gameObject.SetActive(true);
             //TODO:UI更新子弹数
         }
         /// <summary>
@@ -49,11 +59,11 @@ namespace MyGame.PlayerSystem
         {
             currentWeapon.gameObject.SetActive(false);
             weaponIndex += 1;
-            if (weaponIndex > carryWeapon.Length)
+            if (weaponIndex > carryWeapons.Length)
             {
                 weaponIndex = 0;
             }
-            currentWeapon = carryWeapon[weaponIndex];
+            currentWeapon = carryWeapons[weaponIndex];
             currentWeapon.gameObject.SetActive(true);
         }
         /// <summary>
@@ -66,10 +76,11 @@ namespace MyGame.PlayerSystem
             weaponIndex -= 1;
             if (weaponIndex < 0)
             {
-                weaponIndex = carryWeapon.Length - 1;
+                weaponIndex = carryWeapons.Length - 1;
             }
-            currentWeapon = carryWeapon[weaponIndex];
+            currentWeapon = carryWeapons[weaponIndex];
             currentWeapon.gameObject.SetActive(true);
+            //TODO: UI更新子弹和枪械
         }
         /// <summary>
         /// 收起武器
@@ -77,13 +88,23 @@ namespace MyGame.PlayerSystem
         public void PutWeapon()
         {
             currentWeapon.gameObject.SetActive(false);
+            //TODO: UI更新子弹和枪械
+        }
+        public void ExchangeWeapon(int index1, int index2)
+        {
+            carryWeapons[index1].gameObject.SetActive(false);
+            carryWeapons[index2].gameObject.SetActive(false);
+            Weapon temp = carryWeapons[index1];
+            carryWeapons[index1] = carryWeapons[index2];
+            carryWeapons[index2] = temp;
+            currentWeapon = carryWeapons[weaponIndex];
+            currentWeapon.gameObject.SetActive(true);
         }
         /// <summary>
         /// 拿出武器
         /// </summary>
         public void TakeoutWeapon()
         {
-            Debug.Log("拿出武器");
             currentWeapon.gameObject.SetActive(true);
         }
     }

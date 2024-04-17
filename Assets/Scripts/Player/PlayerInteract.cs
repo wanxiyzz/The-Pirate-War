@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using MyGame.InputSystem;
 using UnityEngine;
-using UnityEngine.InputSystem;
-
 namespace MyGame.PlayerSystem
 {
     public class PlayerInteract : MonoBehaviour
@@ -43,7 +41,6 @@ namespace MyGame.PlayerSystem
         private void Interact()
         {
             isInteractive = !isInteractive;
-            Debug.Log(isInteractive);
             if (isInteractive)
             {
                 if (currentInteractable != null)

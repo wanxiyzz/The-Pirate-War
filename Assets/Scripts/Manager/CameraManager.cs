@@ -11,10 +11,16 @@ public class CameraManager : Singleton<CameraManager>
     private Coroutine rotateCameraCoroutine;
     private CinemachineTransposer transposer;
     private CinemachineFramingTransposer framingTransposer;
+
+    //震动
+    private CinemachineBasicMultiChannelPerlin cinemaPerlin;
+    private Coroutine cameraShakeCoroutine;
     void Start()
     {
         transposer = vCam.GetCinemachineComponent<CinemachineTransposer>();
         framingTransposer = vCam.GetCinemachineComponent<CinemachineFramingTransposer>();
+        cinemaPerlin = vCam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+        cinemaPerlin.m_AmplitudeGain = 0;
     }
     /// <summary>
     /// 调整视距
@@ -26,7 +32,7 @@ public class CameraManager : Singleton<CameraManager>
             StopCoroutine(fieldVisionCoroutine);
             fieldVisionCoroutine = null;
         }
-        fieldVisionCoroutine = StartCoroutine(ChangerFieldVission(zoom, 25));
+        fieldVisionCoroutine = StartCoroutine(ChangerFieldVission(zoom, 25f));
     }
     IEnumerator ChangerFieldVission(float zoom, float frames)
     {
@@ -50,7 +56,7 @@ public class CameraManager : Singleton<CameraManager>
             StopCoroutine(rotateCameraCoroutine);
             rotateCameraCoroutine = null;
         }
-        rotateCameraCoroutine = StartCoroutine(IERotateCamera(rotation * Quaternion.Euler(0, 0, -90)));
+        rotateCameraCoroutine = StartCoroutine(IERotateCamera(rotation));
     }
     IEnumerator IERotateCamera(Quaternion angle)
     {
@@ -59,7 +65,7 @@ public class CameraManager : Singleton<CameraManager>
         while (t < 25)
         {
             t++;
-            mainCamera.transform.rotation = Quaternion.Lerp(startAngle, angle, t / 25);
+            mainCamera.transform.rotation = Quaternion.Lerp(startAngle, angle, t / 25f);
             yield return Setting.waitForFixedUpdate;
         }
     }
@@ -73,7 +79,7 @@ public class CameraManager : Singleton<CameraManager>
             StopCoroutine(rotateCameraCoroutine);
             rotateCameraCoroutine = null;
         }
-        rotateCameraCoroutine = StartCoroutine(IERotateCamera(new Quaternion(0, 0, 0, 1)));
+        rotateCameraCoroutine = StartCoroutine(IERotateCamera(new Quaternion(0f, 0f, 0f, 1f)));
     }
     /// <summary>
     /// 调整视角的偏转
@@ -82,5 +88,24 @@ public class CameraManager : Singleton<CameraManager>
     {
         framingTransposer.m_ScreenX = offsetX;
         framingTransposer.m_ScreenY = offsetY;
+    }
+    /// <summary>
+    /// 控制相机的震动
+    /// </summary>
+    /// <param name="time"></param>
+    public void CameraShake(float time, float amplitudeGain)
+    {
+        if (cameraShakeCoroutine != null)
+        {
+            StopCoroutine(cameraShakeCoroutine);
+            cameraShakeCoroutine = null;
+        }
+        cameraShakeCoroutine = StartCoroutine(CameraShke(time, amplitudeGain));
+    }
+    IEnumerator CameraShke(float time, float amplitudeGain)
+    {
+        cinemaPerlin.m_AmplitudeGain = amplitudeGain;
+        yield return new WaitForSeconds(time);
+        cinemaPerlin.m_AmplitudeGain = 0f;
     }
 }

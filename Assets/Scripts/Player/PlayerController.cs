@@ -7,7 +7,7 @@ namespace MyGame.PlayerSystem
     public class PlayerController : MonoBehaviour
     {
         private Rigidbody2D rigi;
-        private PlayerState playerState;
+        private PlayerState playerState = new PlayerState();
         [SerializeField] private bool isMoveing;
         private int speed = 5;
         //Ship
@@ -19,7 +19,6 @@ namespace MyGame.PlayerSystem
         private void Start()
         {
             rigi = GetComponent<Rigidbody2D>();
-            playerState = GetComponent<PlayerState>();
             EventHandler.PlayerInetractive += Interact;
             BoardShip(shipRigi);
         }
