@@ -42,10 +42,9 @@ namespace MyGame.PlayerSystem
         {
             if (currentWeapon == carryWeapons[index])
             {
-                Debug.Log("替换当前的武器");
                 currentWeapon.gameObject.SetActive(false);
                 currentWeapon = allWeapons[(int)weaponType];
-                currentWeapon.gameObject.SetActive(true);
+                currentWeapon.gameObject.SetActive(false);
             }
             carryWeapons[index] = allWeapons[(int)weaponType];
             currentWeapon.Init();
@@ -57,14 +56,17 @@ namespace MyGame.PlayerSystem
         /// <param name="index"></param>
         public void SwitchNextWeapon()
         {
-            currentWeapon.gameObject.SetActive(false);
-            weaponIndex += 1;
-            if (weaponIndex > carryWeapons.Length)
+            if (currentWeapon.gameObject.activeSelf)
             {
-                weaponIndex = 0;
+                currentWeapon.gameObject.SetActive(false);
+                weaponIndex += 1;
+                if (weaponIndex > carryWeapons.Length)
+                {
+                    weaponIndex = 0;
+                }
+                currentWeapon = carryWeapons[weaponIndex];
+                currentWeapon.gameObject.SetActive(true);
             }
-            currentWeapon = carryWeapons[weaponIndex];
-            currentWeapon.gameObject.SetActive(true);
         }
         /// <summary>
         /// 切换上一个武器
@@ -72,15 +74,18 @@ namespace MyGame.PlayerSystem
         /// <param name="index"></param>
         public void SwitchLastWeapon()
         {
-            currentWeapon.gameObject.SetActive(false);
-            weaponIndex -= 1;
-            if (weaponIndex < 0)
+            if (currentWeapon.gameObject.activeSelf)
             {
-                weaponIndex = carryWeapons.Length - 1;
+                currentWeapon.gameObject.SetActive(false);
+                weaponIndex -= 1;
+                if (weaponIndex < 0)
+                {
+                    weaponIndex = carryWeapons.Length - 1;
+                }
+                currentWeapon = carryWeapons[weaponIndex];
+                currentWeapon.gameObject.SetActive(true);
+                //TODO: UI更新子弹和枪械
             }
-            currentWeapon = carryWeapons[weaponIndex];
-            currentWeapon.gameObject.SetActive(true);
-            //TODO: UI更新子弹和枪械
         }
         /// <summary>
         /// 收起武器

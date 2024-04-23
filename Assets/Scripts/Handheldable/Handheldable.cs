@@ -18,7 +18,11 @@ namespace MyGame.HandheldableSystem
         }
         protected void OnDisable()
         {
-            GameInput.Instance.UseItemAction -= ItemUsed;
+            try
+            {
+                GameInput.Instance.UseItemAction -= ItemUsed;
+            }
+            catch { }
         }
         protected void Update()
         {

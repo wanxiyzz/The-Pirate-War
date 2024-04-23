@@ -9,6 +9,7 @@ namespace MyGame.PlayerSystem
         public Vector2 plsyerDir;
         public int currentHealth = 0;
         public int playerAction;
+        public bool is2Floor;
         private void Awake()
         {
             currentHealth = Setting.maxHealth;

@@ -1,17 +1,27 @@
 using System.Collections.Generic;
 using MyGame.InputSystem;
+using MyGame.UISystem;
 using UnityEngine;
 namespace MyGame.PlayerSystem
 {
     public class PlayerInteract : MonoBehaviour
     {
-        [SerializeField] private List<Iinteractable> interactables = new List<Iinteractable>();
-        [SerializeField] private Iinteractable currentInteractable;
+        private List<Iinteractable> interactables = new List<Iinteractable>();
+        private Iinteractable currentInteractable;
         private bool isInteractive;
-        private void Start()
+
+        private void OnEnable()
         {
             GameInput.Instance.InteractAction += Interact;
+            EventHandler.EnterPlayerInteract += OnEnterPlayerInteract;
         }
+        private void OnDisable()
+        {
+            GameInput.Instance.InteractAction -= Interact;
+            EventHandler.EnterPlayerInteract -= OnEnterPlayerInteract;
+        }
+
+
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (other.TryGetComponent<Iinteractable>(out currentInteractable))
@@ -19,6 +29,7 @@ namespace MyGame.PlayerSystem
                 interactables.Add(currentInteractable);
                 currentInteractable.EnterWaitInteract();
             }
+            UIManager.Instance.InteractTips(currentInteractable);
         }
         private void OnTriggerExit2D(Collider2D other)
         {
@@ -37,24 +48,42 @@ namespace MyGame.PlayerSystem
                     else currentInteractable = null;
                 }
             }
+            UIManager.Instance.InteractTips(currentInteractable);
         }
         private void Interact()
         {
-            isInteractive = !isInteractive;
-            if (isInteractive)
+            if (!isInteractive)
             {
-                if (currentInteractable != null)
-                {
-                    currentInteractable.EnterInteract();
-                    EventHandler.CallPlayerInetractive(true);
-                }
+                EnterInetract();
             }
             else
             {
-                if (currentInteractable != null)
-                    currentInteractable.ExitInteract();
-                EventHandler.CallPlayerInetractive(false);
+                ExitInteract();
             }
+        }
+        private void EnterInetract()
+        {
+            if (currentInteractable != null)
+            {
+                currentInteractable.EnterInteract();
+                EventHandler.CallPlayerInetractive(true);
+                UIManager.Instance.InteractTips(null);
+                isInteractive = true;
+            }
+        }
+        public void ExitInteract()
+        {
+            if (currentInteractable != null)
+                currentInteractable.ExitInteract();
+            UIManager.Instance.InteractTips(currentInteractable);
+            EventHandler.CallPlayerInetractive(false);
+            isInteractive = false;
+        }
+
+        private void OnEnterPlayerInteract(bool obj)
+        {
+            if (obj) EnterInetract();
+            else ExitInteract();
         }
 
     }

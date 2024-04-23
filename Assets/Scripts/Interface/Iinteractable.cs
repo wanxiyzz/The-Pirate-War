@@ -1,7 +1,7 @@
 using UnityEngine;
 public interface Iinteractable
 {
-    public string Name { get; }
+    public string Feature { get; }
     public void EnterInteract();
     public void ExitInteract();
     public void EnterWaitInteract();

@@ -1,11 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
+using MyGame.PlayerSystem;
 using UnityEngine;
 namespace MyGame.ShipSystem
 {
     public class ExitFloor : MonoBehaviour
     {
-        private ShipFloor shipFloor;
+        ShipFloor shipFloor;
         private void Start()
         {
             shipFloor = GetComponentInParent<ShipFloor>();

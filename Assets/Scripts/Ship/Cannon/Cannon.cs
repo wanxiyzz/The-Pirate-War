@@ -1,6 +1,11 @@
+using System;
 using System.Collections;
 using MyGame.InputSystem;
+using MyGame.UISystem;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Interactions;
+
 namespace MyGame.ShipSystem.Cannon
 {
     public class Cannon : MonoBehaviour, Iinteractable
@@ -13,17 +18,43 @@ namespace MyGame.ShipSystem.Cannon
         [SerializeField] Transform cannonBody;
         [SerializeField] Transform interactPoint;
         [SerializeField] Transform firePoint;
-        [SerializeField] float cannonballSpeed;
 
 
         [SerializeField] SpriteRenderer spriteRenderer;
-        [SerializeField] bool haveBall = true;
+        [SerializeField] bool haveBall = false;
         [SerializeField] ParticleSystem grey;
 
 
         private Animator animator;
+        private bool havePlayer = false;
+        public string Feature => "使用船炮";
 
-        public string Name => "船炮";
+        private void Onperformed(InputAction.CallbackContext context)
+        {
+            if (context.interaction is HoldInteraction)
+            {
+                if (!havePlayer && !haveBall)
+                {
+                    //TODO:看看炮筒小伙子
+                    Debug.Log("进入大炮");
+                    GameManager.Instance.player.EnterCannon(transform);
+                    UIManager.Instance.Tips(true, "长按 F 退出大炮");
+                    havePlayer = true;
+                }
+                else
+                {
+                    Debug.Log("退出大炮");
+                    UIManager.Instance.Tips(true, "长按 F 钻入大炮");
+                    GameManager.Instance.player.ExitCannon(interactPoint);
+                    havePlayer = false;
+                }
+            }
+        }
+
+        private void OnDisable()
+        {
+
+        }
 
         private void Awake()
         {
@@ -32,11 +63,13 @@ namespace MyGame.ShipSystem.Cannon
         }
         public void EnterInteract()
         {
+            GameInput.Instance.playerInputActions.Player.Interact.performed += Onperformed;
             GameInput.Instance.MovementAction += InputInteract;
             GameInput.Instance.UseItemAction += Fire;
             GameManager.Instance.player.PlayerEnterInteract(interactPoint);
             spriteRenderer.sprite = ItemManager.Instance.defaultCannonSprite;
             CameraManager.Instance.ChangeCameraOffset(0.5f, 0.8f);
+            UIManager.Instance.Tips(true, "长按 F 钻入大炮");
         }
 
         public void EnterWaitInteract()
@@ -46,11 +79,13 @@ namespace MyGame.ShipSystem.Cannon
 
         public void ExitInteract()
         {
+            GameInput.Instance.playerInputActions.Player.Interact.performed -= Onperformed;
             GameInput.Instance.MovementAction -= InputInteract;
             GameInput.Instance.UseItemAction -= Fire;
             CameraManager.Instance.ResetCamera();
             CameraManager.Instance.ChangeCameraOffset(0.5f, 0.5f);
             spriteRenderer.sprite = ItemManager.Instance.selectCannonSprite;
+            UIManager.Instance.Tips(false, "");
         }
 
         public void ExitWaitInteract()
@@ -67,14 +102,25 @@ namespace MyGame.ShipSystem.Cannon
         }
         public void Fire()
         {
+            if (havePlayer)
+            {
+                GameManager.Instance.player.LeaveShip();
+                GameManager.Instance.player.FirePlayer(firePoint.position, (firePoint.position - cannonBody.position).normalized);
+                UIManager.Instance.Tips(false, string.Empty);
+                return;
+            }
             if (haveBall)
             {
                 CameraManager.Instance.CameraShake(0.2f, 2f);
                 animator.Play("Fire");
                 grey.Play();
-                Vector2 velocity = (firePoint.position - cannonBody.position).normalized * cannonballSpeed;
+                Vector2 velocity = (firePoint.position - cannonBody.position).normalized * Setting.cannonballSpeed;
                 CannonballPool.Instance.GetCannonball(velocity, firePoint.position);
-                // haveBall = false;
+                haveBall = false;
+            }
+            else
+            {
+                //TODO:没有炮弹
             }
         }
     }

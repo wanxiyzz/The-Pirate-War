@@ -32,7 +32,7 @@ public class CameraManager : Singleton<CameraManager>
             StopCoroutine(fieldVisionCoroutine);
             fieldVisionCoroutine = null;
         }
-        fieldVisionCoroutine = StartCoroutine(ChangerFieldVission(zoom, 25f));
+        fieldVisionCoroutine = StartCoroutine(ChangerFieldVission(zoom, 50f));
     }
     IEnumerator ChangerFieldVission(float zoom, float frames)
     {
@@ -62,10 +62,10 @@ public class CameraManager : Singleton<CameraManager>
     {
         Quaternion startAngle = mainCamera.transform.rotation;
         float t = 0;
-        while (t < 25)
+        while (t < 50)
         {
             t++;
-            mainCamera.transform.rotation = Quaternion.Lerp(startAngle, angle, t / 25f);
+            mainCamera.transform.rotation = Quaternion.Lerp(startAngle, angle, t / 50f);
             yield return Setting.waitForFixedUpdate;
         }
     }

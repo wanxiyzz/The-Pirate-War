@@ -13,4 +13,9 @@ public class EventHandler
         ChangeWeaponUI?.Invoke(tableIndex, bagIndex);
     }
     // Add other events as needed
+    public static event Action<bool> EnterPlayerInteract;
+    public static void CallEnterPlayerInteract(bool value)
+    {
+        EnterPlayerInteract?.Invoke(value);
+    }
 }

@@ -7,3 +7,7 @@ public enum WeaponSlotType
 {
     Table, Bag,
 }
+public enum HandHeld
+{
+    Weapon, Lantern, Bucket
+}

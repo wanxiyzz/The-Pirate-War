@@ -6,39 +6,43 @@ namespace MyGame.UISystem
 {
     public class UIManager : Singleton<UIManager>
     {
-        public Text hemlText;
+        public HelmUI helmUI;
         [SerializeField] GameObject WeaponTableUI;
-        void Start()
-        {
-        }
+        [SerializeField] Text interactTipsText;
+        [SerializeField] Text tipsText;
 
-        void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.K))
-            {
-                OpenWeaponTableUI(true);
-            }
-            if (Input.GetKeyDown(KeyCode.L))
-            {
-                OpenWeaponTableUI(false);
-            }
-        }
         public void EnterHelm(float helmRotate)
         {
-            hemlText.gameObject.SetActive(true);
-            UpdateHeml(helmRotate);
+            helmUI.OpenHelmUI(helmRotate);
         }
         public void ExitHelm()
         {
-            hemlText.gameObject.SetActive(false);
+            helmUI.CloseHelmUI();
         }
         public void UpdateHeml(float helmRotate)
         {
-            hemlText.text = "舵角：" + helmRotate.ToString("f2");
+            helmUI.UpdateHeml(helmRotate);
         }
         public void OpenWeaponTableUI(bool isOpen)
         {
             WeaponTableUI.gameObject.SetActive(isOpen);
+        }
+        public void Tips(bool display, string tips)
+        {
+            tipsText.enabled = display;
+            tipsText.text = tips;
+        }
+        public void InteractTips(Iinteractable interactable)
+        {
+            if (interactable == null)
+            {
+                interactTipsText.enabled = false;
+            }
+            else
+            {
+                interactTipsText.enabled = true;
+                interactTipsText.text = "按下 F " + interactable.Feature;
+            }
         }
     }
 }

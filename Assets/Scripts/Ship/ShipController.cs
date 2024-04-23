@@ -11,9 +11,11 @@ namespace MyGame.ShipSystem
         [SerializeField] private float angularVelocity;//当前角速度
         private Rigidbody2D rigi;
         public Vector2 Velocity => rigi.velocity;
+        [SerializeField] private ShipHoleManager shipHole;
         void Start()
         {
             rigi = GetComponent<Rigidbody2D>();
+            shipHole = GetComponentInChildren<ShipHoleManager>();
         }
         void Update()
         {
@@ -64,6 +66,7 @@ namespace MyGame.ShipSystem
         {
             Debug.Log("打中了");
             WoodClipPool.Instance.PrepareObject(position);
+            shipHole.BrokenHole(position);
         }
 
     }

@@ -42,7 +42,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""id"": ""ff24bad1-9d7a-407c-b975-c1aa97add69c"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": """",
+                    ""interactions"": ""Hold(duration=1),Tap"",
                     ""initialStateCheck"": false
                 },
                 {
@@ -76,6 +76,33 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""name"": ""Loading"",
                     ""type"": ""Button"",
                     ""id"": ""3e4becd7-9e98-443b-886c-66412fca48b3"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Lantern"",
+                    ""type"": ""Button"",
+                    ""id"": ""2afe854d-d35f-4356-bc93-33abcb4b008d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Bucket"",
+                    ""type"": ""Button"",
+                    ""id"": ""f49b40c8-58ac-400d-8ebf-e91a9f49fc9a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""OpenBag"",
+                    ""type"": ""Button"",
+                    ""id"": ""eefb6243-6a94-4183-9aa7-af0e22cf79fc"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -258,6 +285,39 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""action"": ""Loading"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2ca3bbc6-1666-4b1d-9ce3-260c68220bb2"",
+                    ""path"": ""<Keyboard>/v"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Lantern"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""42d33d3a-8fdd-44c2-802e-68b713afae7b"",
+                    ""path"": ""<Keyboard>/c"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Bucket"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e0bd5f1a-8f03-49eb-959c-6e94d612ac04"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""OpenBag"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -272,6 +332,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         m_Player_ChangeLastWeapon = m_Player.FindAction("ChangeLastWeapon", throwIfNotFound: true);
         m_Player_Skill = m_Player.FindAction("Skill", throwIfNotFound: true);
         m_Player_Loading = m_Player.FindAction("Loading", throwIfNotFound: true);
+        m_Player_Lantern = m_Player.FindAction("Lantern", throwIfNotFound: true);
+        m_Player_Bucket = m_Player.FindAction("Bucket", throwIfNotFound: true);
+        m_Player_OpenBag = m_Player.FindAction("OpenBag", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -337,6 +400,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_ChangeLastWeapon;
     private readonly InputAction m_Player_Skill;
     private readonly InputAction m_Player_Loading;
+    private readonly InputAction m_Player_Lantern;
+    private readonly InputAction m_Player_Bucket;
+    private readonly InputAction m_Player_OpenBag;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -347,6 +413,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         public InputAction @ChangeLastWeapon => m_Wrapper.m_Player_ChangeLastWeapon;
         public InputAction @Skill => m_Wrapper.m_Player_Skill;
         public InputAction @Loading => m_Wrapper.m_Player_Loading;
+        public InputAction @Lantern => m_Wrapper.m_Player_Lantern;
+        public InputAction @Bucket => m_Wrapper.m_Player_Bucket;
+        public InputAction @OpenBag => m_Wrapper.m_Player_OpenBag;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -374,6 +443,15 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Loading.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLoading;
                 @Loading.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLoading;
                 @Loading.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLoading;
+                @Lantern.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLantern;
+                @Lantern.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLantern;
+                @Lantern.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLantern;
+                @Bucket.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnBucket;
+                @Bucket.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnBucket;
+                @Bucket.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnBucket;
+                @OpenBag.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnOpenBag;
+                @OpenBag.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnOpenBag;
+                @OpenBag.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnOpenBag;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -396,6 +474,15 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Loading.started += instance.OnLoading;
                 @Loading.performed += instance.OnLoading;
                 @Loading.canceled += instance.OnLoading;
+                @Lantern.started += instance.OnLantern;
+                @Lantern.performed += instance.OnLantern;
+                @Lantern.canceled += instance.OnLantern;
+                @Bucket.started += instance.OnBucket;
+                @Bucket.performed += instance.OnBucket;
+                @Bucket.canceled += instance.OnBucket;
+                @OpenBag.started += instance.OnOpenBag;
+                @OpenBag.performed += instance.OnOpenBag;
+                @OpenBag.canceled += instance.OnOpenBag;
             }
         }
     }
@@ -408,5 +495,8 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         void OnChangeLastWeapon(InputAction.CallbackContext context);
         void OnSkill(InputAction.CallbackContext context);
         void OnLoading(InputAction.CallbackContext context);
+        void OnLantern(InputAction.CallbackContext context);
+        void OnBucket(InputAction.CallbackContext context);
+        void OnOpenBag(InputAction.CallbackContext context);
     }
 }

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2620197363079183259}
   - component: {fileID: 4646524825525732503}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: CannonFire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -71,7 +71,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1108860059
-  m_SortingLayer: 4
+  m_SortingLayer: 6
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 384b7d82a14625a43857b4cd2010c5bf, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -93,7 +93,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2384559546843879398}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: FirePoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -125,9 +125,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4474011426266301708}
   - component: {fileID: 7944566838826658419}
-  - component: {fileID: 2876270943525342155}
   - component: {fileID: 6836881775340183780}
-  m_Layer: 8
+  - component: {fileID: 1342319638098012130}
+  m_Layer: 17
   m_Name: Cannon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -168,36 +168,9 @@ MonoBehaviour:
   cannonBody: {fileID: 613731272332118529}
   interactPoint: {fileID: 4474011427857572213}
   firePoint: {fileID: 2384559546843879398}
-  cannonballSpeed: 50
   spriteRenderer: {fileID: 4474011427475867929}
   haveBall: 1
   grey: {fileID: 7318978156755682870}
---- !u!61 &2876270943525342155
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4474011426266301709}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.5322696}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 0.5, y: 1.2810056}
-  m_EdgeRadius: 0
 --- !u!95 &6836881775340183780
 Animator:
   serializedVersion: 4
@@ -218,6 +191,32 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!61 &1342319638098012130
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4474011426266301709}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0.5322696}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.25}
+    oldSize: {x: 2, y: 2}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.5, y: 1.2810056}
+  m_EdgeRadius: 0
 --- !u!1 &4474011427475867931
 GameObject:
   m_ObjectHideFlags: 0
@@ -228,7 +227,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4474011427475867930}
   - component: {fileID: 4474011427475867929}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Rander
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -288,8 +287,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -347419873
-  m_SortingLayer: 3
+  m_SortingLayerID: 2144500983
+  m_SortingLayer: 5
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: f01ac23c73c5d4f4ab3957175fe6aef3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -311,7 +310,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4474011427857572213}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: InteractPiont
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -344,7 +343,7 @@ GameObject:
   - component: {fileID: 1832214885638719696}
   - component: {fileID: 7318978156755682870}
   - component: {fileID: 6014362725836191486}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: Grey
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5113,7 +5112,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -347419873
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_RenderMode: 0
   m_MeshDistribution: 0
@@ -5154,7 +5153,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 613731272332118529}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: CannonBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}

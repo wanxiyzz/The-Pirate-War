@@ -5,7 +5,7 @@ namespace MyGame.ShipSystem
 {
     public class ShipLadder : MonoBehaviour, Iinteractable
     {
-        public string Name => "船梯";
+        public string Feature => "船梯";
 
         public void EnterInteract()
         {

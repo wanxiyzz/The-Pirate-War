@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Interactions;
 
 namespace MyGame.InputSystem
 {
@@ -32,7 +33,11 @@ namespace MyGame.InputSystem
         }
         private void Interact(InputAction.CallbackContext context)
         {
-            InteractAction?.Invoke();
+            if (context.interaction is TapInteraction)
+            {
+                InteractAction?.Invoke();
+                Debug.Log("点击");
+            }
         }
         private void UseItem(InputAction.CallbackContext context)
         {
