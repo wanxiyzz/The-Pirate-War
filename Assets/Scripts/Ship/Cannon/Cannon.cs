@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using MyGame.InputSystem;
 using MyGame.UISystem;
@@ -28,6 +27,7 @@ namespace MyGame.ShipSystem.Cannon
         private Animator animator;
         private bool havePlayer = false;
         public string Feature => "使用船炮";
+        public bool IsSimple => false;
 
         private void Onperformed(InputAction.CallbackContext context)
         {
@@ -104,9 +104,9 @@ namespace MyGame.ShipSystem.Cannon
         {
             if (havePlayer)
             {
-                GameManager.Instance.player.LeaveShip();
                 GameManager.Instance.player.FirePlayer(firePoint.position, (firePoint.position - cannonBody.position).normalized);
                 UIManager.Instance.Tips(false, string.Empty);
+                havePlayer = false;
                 return;
             }
             if (haveBall)

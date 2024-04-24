@@ -18,4 +18,9 @@ public class EventHandler
     {
         EnterPlayerInteract?.Invoke(value);
     }
+    public static event Action<int, bool> UpdateWeaponUI;
+    public static void CallUpdateWeaponUI(int index, bool value)
+    {
+        UpdateWeaponUI?.Invoke(index, value);
+    }
 }

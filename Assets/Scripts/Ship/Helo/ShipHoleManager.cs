@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-namespace MyGame.ShipSystem
+namespace MyGame.ShipSystem.Hole
 {
     public class ShipHoleManager : MonoBehaviour
     {

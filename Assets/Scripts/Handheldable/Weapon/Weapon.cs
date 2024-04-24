@@ -1,15 +1,16 @@
 using UnityEngine;
+using System;
 namespace MyGame.HandheldableSystem.WeaponSystem
 {
     public abstract class Weapon : Handheldable
     {
         [SerializeField] public WeaponType weaponType = WeaponType.Knife;
-        [SerializeField] protected int maxBullets = 0;
+        [SerializeField] public int maxBullets = 0;
         public int currentBullets = 0;
         public int damage = 0;
         public Transform muzzlePos;
 
-
+        public event Action UpdateBullet;
         //鼠标输入
 
         // private Animator animator;
@@ -19,7 +20,10 @@ namespace MyGame.HandheldableSystem.WeaponSystem
             muzzlePos = transform.Find("Muzzle");
         }
 
-
+        public void CallUpdateBullet()
+        {
+            UpdateBullet?.Invoke();
+        }
         protected override void Aim()
         {
             mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -49,6 +53,7 @@ namespace MyGame.HandheldableSystem.WeaponSystem
                 currentBufferTime = bufferTime;
                 canUsed = false;
                 InstantiateAttack(muzzlePos.position, direction);
+                UpdateBullet?.Invoke();
             }
         }
 

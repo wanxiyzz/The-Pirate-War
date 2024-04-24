@@ -24,6 +24,10 @@ namespace MyGame.PlayerSystem
 
         private void OnTriggerEnter2D(Collider2D other)
         {
+            if (currentInteractable != null)
+            {
+                currentInteractable.ExitWaitInteract();
+            }
             if (other.TryGetComponent<Iinteractable>(out currentInteractable))
             {
                 interactables.Add(currentInteractable);
@@ -65,7 +69,13 @@ namespace MyGame.PlayerSystem
         {
             if (currentInteractable != null)
             {
+                if (currentInteractable.IsSimple)
+                {
+                    currentInteractable.EnterInteract();
+                    return;
+                }
                 currentInteractable.EnterInteract();
+                Debug.Log("与" + currentInteractable.Feature + "交互");
                 EventHandler.CallPlayerInetractive(true);
                 UIManager.Instance.InteractTips(null);
                 isInteractive = true;

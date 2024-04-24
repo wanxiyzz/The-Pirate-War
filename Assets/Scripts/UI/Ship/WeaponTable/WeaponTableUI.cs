@@ -12,7 +12,6 @@ namespace MyGame.UISystem.WeaponTable
         [SerializeField] WeaponSlotUI weaponPrefab;
         [SerializeField] Transform bagWeaponParent;
         public Image dragImage;
-        private Sprite[] weaponSprites;
 
         public int currentSelectBag;
         private void OnEnable()
@@ -23,16 +22,16 @@ namespace MyGame.UISystem.WeaponTable
         {
             EventHandler.ChangeWeaponUI -= OnChangeWeaponUI;
         }
-        protected override void Awake()
+        private void Start()
         {
-            base.Awake();
-            weaponSprites = new Sprite[tableWeaponSlot.Length];
             for (int i = 0; i < tableWeaponSlot.Length; i++)
             {
                 tableWeaponSlot[i].index = i;
-                weaponSprites[i] = tableWeaponSlot[i].image.sprite;
             }
-
+        }
+        protected override void Awake()
+        {
+            base.Awake();
             UpdateBagWeapon(PlayerWeapon.Instance.carryWeapons);
         }
         /// <summary>
@@ -47,7 +46,7 @@ namespace MyGame.UISystem.WeaponTable
             {
                 bagWeaponSlot[i] = Instantiate(weaponPrefab, bagWeaponParent);
                 bagWeaponSlot[i].index = i;
-                bagWeaponSlot[i].UpdateSlotUI(weaponSprites[(int)weapons[i].weaponType], weapons[i].weaponType);
+                bagWeaponSlot[i].UpdateSlotUI(UIManager.Instance.weaponSprites[(int)weapons[i].weaponType], weapons[i].weaponType);
                 bagWeaponSlot[i].slotType = WeaponSlotType.Bag;
                 for (int j = 0; j < tableWeaponSlot.Length; j++)
                 {
@@ -81,7 +80,7 @@ namespace MyGame.UISystem.WeaponTable
                 }
             }
             tableWeaponSlot[(int)bagType].CanSelected();
-            bagWeaponSlot[bagIndex].UpdateSlotUI(weaponSprites[(int)tableType], tableType);
+            bagWeaponSlot[bagIndex].UpdateSlotUI(UIManager.Instance.weaponSprites[(int)tableType], tableType);
             tableWeaponSlot[tableIndex].UnableSelected();
             PlayerWeapon.Instance.ChangeWeapon(tableType, bagIndex);
         }
@@ -93,7 +92,7 @@ namespace MyGame.UISystem.WeaponTable
             var tableType = tableWeaponSlot[tableIndex].weaponType;
             var bagType = bagWeaponSlot[currentSelectBag].weaponType;
             tableWeaponSlot[(int)bagType].CanSelected();
-            bagWeaponSlot[currentSelectBag].UpdateSlotUI(weaponSprites[(int)tableType], tableType);
+            bagWeaponSlot[currentSelectBag].UpdateSlotUI(UIManager.Instance.weaponSprites[(int)tableType], tableType);
             tableWeaponSlot[tableIndex].UnableSelected();
             PlayerWeapon.Instance.ChangeWeapon(tableType, currentSelectBag);
         }

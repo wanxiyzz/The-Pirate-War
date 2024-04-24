@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using MyGame.PlayerSystem;
 using UnityEngine;
-namespace MyGame.ShipSystem
+namespace MyGame.ShipSystem.Floor
 {
     public class EnterFloor : MonoBehaviour
     {

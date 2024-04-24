@@ -1,6 +1,7 @@
 using UnityEngine;
 using MyGame.InputSystem;
 using MyGame.HandheldableSystem.WeaponSystem;
+using MyGame.UISystem;
 
 namespace MyGame.PlayerSystem
 {
@@ -11,6 +12,7 @@ namespace MyGame.PlayerSystem
         public Weapon currentWeapon;
         [SerializeField] private int weaponIndex = 0;
         public int canTackWeaponNum = 2;
+        public bool haveProp;
         private void OnPlayerInetractive(bool isInteractive)
         {
             if (isInteractive) PutWeapon();
@@ -35,6 +37,10 @@ namespace MyGame.PlayerSystem
 
             currentWeapon = carryWeapons[weaponIndex];
         }
+        private void Start()
+        {
+            WeaponUI.Instance.InitWeaponUI(carryWeapons);
+        }
         /// <summary>
         /// 从武器盒中切武器
         /// </summary>
@@ -42,13 +48,11 @@ namespace MyGame.PlayerSystem
         {
             if (currentWeapon == carryWeapons[index])
             {
-                currentWeapon.gameObject.SetActive(false);
                 currentWeapon = allWeapons[(int)weaponType];
-                currentWeapon.gameObject.SetActive(false);
             }
             carryWeapons[index] = allWeapons[(int)weaponType];
-            currentWeapon.Init();
-            //TODO:UI更新子弹数
+            carryWeapons[index].Init();
+            WeaponUI.Instance.ChangeWeaponUI(carryWeapons[index], index);
         }
         /// <summary>
         /// 切换下一个武器
@@ -67,6 +71,7 @@ namespace MyGame.PlayerSystem
                 currentWeapon = carryWeapons[weaponIndex];
                 currentWeapon.gameObject.SetActive(true);
             }
+            WeaponUI.Instance.SelectWeaponUI(weaponIndex);
         }
         /// <summary>
         /// 切换上一个武器
@@ -84,7 +89,7 @@ namespace MyGame.PlayerSystem
                 }
                 currentWeapon = carryWeapons[weaponIndex];
                 currentWeapon.gameObject.SetActive(true);
-                //TODO: UI更新子弹和枪械
+                WeaponUI.Instance.SelectWeaponUI(weaponIndex);
             }
         }
         /// <summary>
@@ -92,9 +97,12 @@ namespace MyGame.PlayerSystem
         /// </summary>
         public void PutWeapon()
         {
+            WeaponUI.Instance.DeselectWeaponUI();
             currentWeapon.gameObject.SetActive(false);
-            //TODO: UI更新子弹和枪械
         }
+        /// <summary>
+        /// 交换背包武器
+        /// </summary>
         public void ExchangeWeapon(int index1, int index2)
         {
             carryWeapons[index1].gameObject.SetActive(false);
@@ -104,13 +112,21 @@ namespace MyGame.PlayerSystem
             carryWeapons[index2] = temp;
             currentWeapon = carryWeapons[weaponIndex];
             currentWeapon.gameObject.SetActive(true);
+            WeaponUI.Instance.UpdateWeaponUI(carryWeapons);
         }
         /// <summary>
         /// 拿出武器
         /// </summary>
         public void TakeoutWeapon()
         {
+            if (haveProp) return;
+            WeaponUI.Instance.SelectWeaponUI(weaponIndex);
             currentWeapon.gameObject.SetActive(true);
+        }
+        public void AddBullet()
+        {
+            currentWeapon.currentBullets = currentWeapon.maxBullets;
+            currentWeapon.CallUpdateBullet();
         }
     }
 }

@@ -1,16 +1,13 @@
-using System;
 using MyGame.HandheldableSystem;
 using MyGame.InputSystem;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Rendering.Universal;
 
 namespace MyGame.PlayerSystem
 {
     public class PlayerProp : MonoBehaviour
     {
         public Lantern lanternHolder;
-        public PlayerWeapon playerWeapon;
         public HandHeld currentHandHeld;
         void Start()
         {
@@ -23,21 +20,25 @@ namespace MyGame.PlayerSystem
             if (currentHandHeld == HandHeld.Lantern)
             {
                 lanternHolder.PackUpLantern();
-                playerWeapon.TakeoutWeapon();
                 currentHandHeld = HandHeld.Weapon;
-
+                TackOutWeapon();
             }
             else
             {
                 lanternHolder.TackOutLantern();
-                playerWeapon.PutWeapon();
                 currentHandHeld = HandHeld.Lantern;
+                PickUpWeapon();
             }
         }
-
-        void Update()
+        public void PickUpWeapon()
         {
-
+            PlayerWeapon.Instance.haveProp = true;
+            PlayerWeapon.Instance.PutWeapon();
+        }
+        public void TackOutWeapon()
+        {
+            PlayerWeapon.Instance.haveProp = false;
+            PlayerWeapon.Instance.TakeoutWeapon();
         }
 
     }

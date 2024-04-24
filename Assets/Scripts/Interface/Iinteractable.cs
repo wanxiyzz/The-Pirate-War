@@ -2,6 +2,7 @@ using UnityEngine;
 public interface Iinteractable
 {
     public string Feature { get; }
+    public bool IsSimple { get; }
     public void EnterInteract();
     public void ExitInteract();
     public void EnterWaitInteract();

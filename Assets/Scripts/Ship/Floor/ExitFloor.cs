@@ -1,6 +1,6 @@
 using MyGame.PlayerSystem;
 using UnityEngine;
-namespace MyGame.ShipSystem
+namespace MyGame.ShipSystem.Floor
 {
     public class ExitFloor : MonoBehaviour
     {

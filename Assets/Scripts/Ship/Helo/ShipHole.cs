@@ -3,57 +3,61 @@ using System.Collections.Generic;
 using MyGame.Inventory;
 using UnityEngine;
 
-public class ShipHole : MonoBehaviour, Iinteractable
+namespace MyGame.ShipSystem.Hole
 {
-    public int brokenLevel = 0;
-    private SpriteRenderer spriteRenderer;
-    public string Feature => "修复船洞";
-    private void Start()
+    public class ShipHole : MonoBehaviour, Iinteractable
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        spriteRenderer.enabled = false;
-    }
-    public void EnterInteract()
-    {
-        if (PlayerBag.Instance.UseBoard())
+        public int brokenLevel = 0;
+        private SpriteRenderer spriteRenderer;
+        public string Feature => "修复船洞";
+        public bool IsSimple => false;
+        private void Start()
         {
+            spriteRenderer = GetComponent<SpriteRenderer>();
+            spriteRenderer.enabled = false;
+        }
+        public void EnterInteract()
+        {
+            if (PlayerBag.Instance.UseBoard())
+            {
+
+            }
+            else
+            {
+                //TODO: 需要木板
+            }
 
         }
-        else
+
+        public void EnterWaitInteract()
         {
-            //TODO: 需要木板
         }
 
-    }
-
-    public void EnterWaitInteract()
-    {
-    }
-
-    public void ExitInteract()
-    {
-    }
-
-    public void ExitWaitInteract()
-    {
-    }
-
-    public void InputInteract(Vector2 input)
-    {
-    }
-    public bool Broken()
-    {
-        if (brokenLevel < 2)
+        public void ExitInteract()
         {
-            brokenLevel++;
-            spriteRenderer.enabled = true;
-            return true;
         }
-        return false;
-    }
-    public void FixHole()
-    {
-        brokenLevel = 0;
-        spriteRenderer.enabled = false;
+
+        public void ExitWaitInteract()
+        {
+        }
+
+        public void InputInteract(Vector2 input)
+        {
+        }
+        public bool Broken()
+        {
+            if (brokenLevel < 2)
+            {
+                brokenLevel++;
+                spriteRenderer.enabled = true;
+                return true;
+            }
+            return false;
+        }
+        public void FixHole()
+        {
+            brokenLevel = 0;
+            spriteRenderer.enabled = false;
+        }
     }
 }

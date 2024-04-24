@@ -48,6 +48,7 @@ namespace MyGame.PlayerSystem
 
         private void LateUpdate()
         {
+            AdjustPlayerInteractPos();
             if (isBoardShip)
             {
                 if (isMoveing || isInteract)
@@ -59,7 +60,6 @@ namespace MyGame.PlayerSystem
                     transform.localPosition = shipPos;
                 }
             }
-            AdjustPlayerInteractPos();
         }
         private void Interact(bool isInteract)
         {
@@ -136,7 +136,7 @@ namespace MyGame.PlayerSystem
             transform.parent = shipRigi.transform;
             transform.position = worldPos;
             shipPos = transform.localPosition;
-            ShipWaterUI.Instance.OpenWaterUI(shipRigi.GetComponent<ShipTakeWater>());
+            shipRigi.GetComponent<ShipController>().PlayerEnter();
         }
         public void BoardShip(Rigidbody2D shipRigi, Vector2 pos)
         {
@@ -145,13 +145,14 @@ namespace MyGame.PlayerSystem
             transform.parent = shipRigi.transform;
             transform.position = pos;
             shipPos = transform.localPosition;
-            ShipWaterUI.Instance.OpenWaterUI(shipRigi.GetComponent<ShipTakeWater>());
+            shipRigi.GetComponent<ShipController>().PlayerEnter();
         }
         /// <summary>
         /// 离开船
         /// </summary>
         public void LeaveShip()
         {
+            shipRigi.GetComponent<ShipController>().PlayerLeave();
             isBoardShip = false;
             shipRigi = null;
             transform.parent = null;
@@ -181,6 +182,7 @@ namespace MyGame.PlayerSystem
         /// </summary>
         public void FirePlayer(Vector2 firePos, Vector2 dir)
         {
+            LeaveShip();
             Debug.Log("发射玩家");
             transform.position = firePos;
             transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);

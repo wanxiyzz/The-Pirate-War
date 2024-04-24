@@ -18,6 +18,8 @@ namespace MyGame.UISystem
             base.Awake();
             canvasGroup = GetComponent<CanvasGroup>();
             rectTransform = GetComponent<RectTransform>();
+            rectTransform.localScale = Vector3.zero;
+            canvasGroup.alpha = 0;
         }
         private void Update()
         {

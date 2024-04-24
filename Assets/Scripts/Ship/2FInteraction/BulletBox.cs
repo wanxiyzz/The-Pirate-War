@@ -1,22 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
-using MyGame.UISystem;
+using MyGame.PlayerSystem;
 using UnityEngine;
 
-public class WeaponTable : MonoBehaviour, Iinteractable
+public class BulletBox : MonoBehaviour, Iinteractable
 {
+    public string Feature => "补满子弹";
+
+    public bool IsSimple => true;
+
     private SpriteRenderer spriteRenderer;
-    [SerializeField] private Transform interactTran;
-    public string Feature => "查看武器桌";
-    public bool IsSimple => false;
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
     public void EnterInteract()
     {
-        GameManager.Instance.player.PlayerEnterInteract(interactTran);
-        UIManager.Instance.OpenWeaponTableUI(true);
+        PlayerWeapon.Instance.AddBullet();
+        EventHandler.CallEnterPlayerInteract(false);
     }
 
     public void EnterWaitInteract()
@@ -26,16 +27,15 @@ public class WeaponTable : MonoBehaviour, Iinteractable
 
     public void ExitInteract()
     {
-        UIManager.Instance.OpenWeaponTableUI(false);
     }
 
     public void ExitWaitInteract()
     {
-        spriteRenderer.color = Color.white;
+        spriteRenderer.color = Color.blue;
     }
 
     public void InputInteract(Vector2 input)
     {
-    }
 
+    }
 }

@@ -14,6 +14,7 @@ namespace MyGame.ShipSystem
         private float helmRotateSpeedMax = 1;
 
         public string Feature => "使用船舵";
+        public bool IsSimple => false;
         private void Start()
         {
             spriteRenderer = GetComponentInChildren<SpriteRenderer>();

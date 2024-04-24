@@ -1,16 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
+using MyGame.ShipSystem.Sail;
 using UnityEngine;
 using UnityEngine.UI;
 namespace MyGame.UISystem
 {
     public class UIManager : Singleton<UIManager>
     {
+        public ShipSailUI shipSailUI;
         public HelmUI helmUI;
         [SerializeField] GameObject WeaponTableUI;
         [SerializeField] Text interactTipsText;
         [SerializeField] Text tipsText;
+        public Sprite[] weaponSprites;
 
+        #region Helm
         public void EnterHelm(float helmRotate)
         {
             helmUI.OpenHelmUI(helmRotate);
@@ -23,6 +27,23 @@ namespace MyGame.UISystem
         {
             helmUI.UpdateHeml(helmRotate);
         }
+        #endregion
+
+        #region sail
+        public void OpenSailUI(ShipSail shipSail)
+        {
+            Debug.Log(shipSail);
+            shipSailUI.OpenSailUI(shipSail);
+        }
+        public void CloseSailUI()
+        {
+            shipSailUI.CloseSailUI();
+        }
+        public void UpdateSailValue(float sailValue)
+        {
+            shipSailUI.UpdateSailValue(sailValue);
+        }
+        #endregion
         public void OpenWeaponTableUI(bool isOpen)
         {
             WeaponTableUI.gameObject.SetActive(isOpen);
