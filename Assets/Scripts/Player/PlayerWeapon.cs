@@ -5,7 +5,7 @@ using MyGame.UISystem;
 
 namespace MyGame.PlayerSystem
 {
-    public class PlayerWeapon : Singleton<PlayerWeapon>
+    public class PlayerWeapon : MonoBehaviour
     {
         [SerializeField] private Weapon[] allWeapons;
         public Weapon[] carryWeapons;
@@ -13,15 +13,17 @@ namespace MyGame.PlayerSystem
         [SerializeField] private int weaponIndex = 0;
         public int canTackWeaponNum = 2;
         public bool haveProp;
+        public PlayerController playerController;
+        public bool Is2F => playerController.playerPos == PlayerPos.Ship2F;
         private void OnPlayerInetractive(bool isInteractive)
         {
             if (isInteractive) PutWeapon();
             else TakeoutWeapon();
         }
 
-        protected override void Awake()
+        protected void Awake()
         {
-            base.Awake();
+            playerController = GetComponentInParent<PlayerController>();
             allWeapons = GetComponentsInChildren<Weapon>();
             carryWeapons = new Weapon[canTackWeaponNum];
             for (int i = 0; i < canTackWeaponNum; i++)
@@ -33,6 +35,7 @@ namespace MyGame.PlayerSystem
                 allWeapons[i].gameObject.SetActive(false);
             }
             EventHandler.PlayerInetractive += OnPlayerInetractive;
+            EventHandler.PickUpAllItem += OnPlayerInetractive;
             GameInput.Instance.ChangeLastWeaponAction += SwitchLastWeapon;
 
             currentWeapon = carryWeapons[weaponIndex];

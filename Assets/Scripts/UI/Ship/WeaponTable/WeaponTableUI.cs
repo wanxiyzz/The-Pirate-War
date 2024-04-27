@@ -32,7 +32,7 @@ namespace MyGame.UISystem.WeaponTable
         protected override void Awake()
         {
             base.Awake();
-            UpdateBagWeapon(PlayerWeapon.Instance.carryWeapons);
+            UpdateBagWeapon(GameManager.Instance.player.playerWeapon.carryWeapons);
         }
         /// <summary>
         /// 更新背包武器的UI
@@ -82,7 +82,7 @@ namespace MyGame.UISystem.WeaponTable
             tableWeaponSlot[(int)bagType].CanSelected();
             bagWeaponSlot[bagIndex].UpdateSlotUI(UIManager.Instance.weaponSprites[(int)tableType], tableType);
             tableWeaponSlot[tableIndex].UnableSelected();
-            PlayerWeapon.Instance.ChangeWeapon(tableType, bagIndex);
+            GameManager.Instance.player.playerWeapon.ChangeWeapon(tableType, bagIndex);
         }
         /// <summary>
         ///简略版武器的更换 
@@ -94,7 +94,7 @@ namespace MyGame.UISystem.WeaponTable
             tableWeaponSlot[(int)bagType].CanSelected();
             bagWeaponSlot[currentSelectBag].UpdateSlotUI(UIManager.Instance.weaponSprites[(int)tableType], tableType);
             tableWeaponSlot[tableIndex].UnableSelected();
-            PlayerWeapon.Instance.ChangeWeapon(tableType, currentSelectBag);
+            GameManager.Instance.player.playerWeapon.ChangeWeapon(tableType, currentSelectBag);
         }
         /// <summary>
         /// 背包武器之间的交换
@@ -103,7 +103,7 @@ namespace MyGame.UISystem.WeaponTable
         {
             var index2Type = bagWeaponSlot[index2].weaponType;
             var index2Sprite = bagWeaponSlot[index2].image.sprite;
-            PlayerWeapon.Instance.ExchangeWeapon(index1, index2);
+            GameManager.Instance.player.playerWeapon.ExchangeWeapon(index1, index2);
             bagWeaponSlot[index2].UpdateSlotUI(bagWeaponSlot[index1]);
             bagWeaponSlot[index1].UpdateSlotUI(index2Sprite, index2Type);
         }

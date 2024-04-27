@@ -5,9 +5,6 @@ namespace MyGame.HandheldableSystem.WeaponSystem
     {
         protected override void Aim()
         {
-            mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            direction = (mousePos - (Vector2)transform.position).normalized;
-            transform.right = direction;
             if (!canUsed)
             {
                 currentBufferTime -= Time.deltaTime;
@@ -16,11 +13,18 @@ namespace MyGame.HandheldableSystem.WeaponSystem
                     canUsed = true;
                 }
             }
+            CameraManager.Instance.CameraOffsetWithMouse();
         }
 
         protected override void InstantiateAttack(Vector3 attackPos, Vector3 attackDir)
         {
-            Bullet bullet = BulletPool.Instance.GetOwnSideBullet(attackPos, transform.localRotation);
+            // 发射子弹
+            int damage = 100;
+            Bullet bullet;
+            if (playerWeapon.Is2F)
+                bullet = BulletPool.Instance.GetOwnSide2FBullet(attackPos, Quaternion.Euler(attackDir));
+            else
+                bullet = BulletPool.Instance.GetOwnSideBullet(attackPos, Quaternion.Euler(attackDir));
             bullet.Init(damage, attackDir);
         }
     }

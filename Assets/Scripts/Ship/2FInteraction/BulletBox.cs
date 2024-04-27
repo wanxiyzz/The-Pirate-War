@@ -9,14 +9,16 @@ public class BulletBox : MonoBehaviour, Iinteractable
 
     public bool IsSimple => true;
 
+    public bool IsInteractable => false;
+
     private SpriteRenderer spriteRenderer;
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
-    public void EnterInteract()
+    public void EnterInteract(PlayerController playerController)
     {
-        PlayerWeapon.Instance.AddBullet();
+        GameManager.Instance.player.playerWeapon.AddBullet();
         EventHandler.CallEnterPlayerInteract(false);
     }
 

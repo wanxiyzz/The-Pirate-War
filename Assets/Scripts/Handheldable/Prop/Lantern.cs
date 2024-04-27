@@ -11,17 +11,8 @@ namespace MyGame.HandheldableSystem
         {
             lantern = GetComponent<Light2D>();
             spriteRenderer = GetComponentInChildren<SpriteRenderer>();
-        }
-        public void TackOutLantern()
-        {
-            Debug.Log("TackOutLantern");
             lantern.intensity = 1f;
             spriteRenderer.enabled = true;
-        }
-        public void PackUpLantern()
-        {
-            lantern.intensity = 0f;
-            spriteRenderer.enabled = false;
         }
         public override void ItemUsed()
         {

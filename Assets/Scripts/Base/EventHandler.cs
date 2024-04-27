@@ -1,4 +1,5 @@
 using System;
+using MyGame.Inventory;
 
 public class EventHandler
 {
@@ -18,9 +19,24 @@ public class EventHandler
     {
         EnterPlayerInteract?.Invoke(value);
     }
-    public static event Action<int, bool> UpdateWeaponUI;
-    public static void CallUpdateWeaponUI(int index, bool value)
+    public static event Action<Item[], bool, BarrelType> OpenBarrelUI;
+    public static void CallOpenBarrelUI(Item[] items, bool value, BarrelType type)
     {
-        UpdateWeaponUI?.Invoke(index, value);
+        OpenBarrelUI?.Invoke(items, value, type);
+    }
+    public static event Action<Item[], bool, BarrelType> OpenBarrel;
+    public static void CallOpenBarrel(Item[] items, bool value, BarrelType type)
+    {
+        OpenBarrel?.Invoke(items, value, type);
+    }
+    public static event Action<Item[], bool> OpenBagUI;
+    public static void CallOpenBagUI(Item[] items, bool value)
+    {
+        OpenBagUI?.Invoke(items, value);
+    }
+    public static event Action<bool> PickUpAllItem;
+    public static void CallPickUpAllItem(bool value)
+    {
+        PickUpAllItem?.Invoke(value);
     }
 }

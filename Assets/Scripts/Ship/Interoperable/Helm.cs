@@ -1,6 +1,7 @@
 using UnityEngine;
 using MyGame.InputSystem;
 using MyGame.UISystem;
+using MyGame.PlayerSystem;
 
 namespace MyGame.ShipSystem
 {
@@ -12,19 +13,24 @@ namespace MyGame.ShipSystem
         [SerializeField] private float helmRotateSpeed = 0.5f;
         private SpriteRenderer spriteRenderer;
         private float helmRotateSpeedMax = 1;
+        private bool isInteractable;
 
         public string Feature => "使用船舵";
-        public bool IsSimple => false;
+        public bool IsSimple => isInteractable;
+
+        public bool IsInteractable => isInteractable;
+
         private void Start()
         {
             spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         }
-        public void EnterInteract()
+        public void EnterInteract(PlayerController playerController)
         {
             GameInput.Instance.MovementAction += InputInteract;
             UIManager.Instance.EnterHelm(helmRotate);
             GameManager.Instance.player.PlayerEnterInteract(takeHelmPos);
             spriteRenderer.color = Color.white;
+            isInteractable = true;
         }
 
         public void EnterWaitInteract()
@@ -37,6 +43,7 @@ namespace MyGame.ShipSystem
             UIManager.Instance.ExitHelm();
             GameInput.Instance.MovementAction -= InputInteract;
             spriteRenderer.color = Color.green;
+            isInteractable = false;
         }
 
         public void ExitWaitInteract()

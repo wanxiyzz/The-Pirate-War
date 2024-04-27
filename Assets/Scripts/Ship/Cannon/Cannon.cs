@@ -1,5 +1,8 @@
+using System;
 using System.Collections;
 using MyGame.InputSystem;
+using MyGame.Inventory;
+using MyGame.PlayerSystem;
 using MyGame.UISystem;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -28,50 +31,78 @@ namespace MyGame.ShipSystem.Cannon
         private bool havePlayer = false;
         public string Feature => "使用船炮";
         public bool IsSimple => false;
+        public bool isInteractable;
+        public bool IsInteractable => isInteractable;
 
+        private PlayerController player;
+        private float currentLoadTime;//Nop
+        private bool isLoading;//Nop
+        private Coroutine loadingCoroutine;
         private void Onperformed(InputAction.CallbackContext context)
         {
             if (context.interaction is HoldInteraction)
             {
+                if (isLoading) return;
                 if (!havePlayer && !haveBall)
                 {
-                    //TODO:看看炮筒小伙子
-                    Debug.Log("进入大炮");
-                    GameManager.Instance.player.EnterCannon(transform);
+                    GameManager.Instance.player.EnterCannon(transform, out player);
                     UIManager.Instance.Tips(true, "长按 F 退出大炮");
                     havePlayer = true;
                 }
                 else
                 {
-                    Debug.Log("退出大炮");
+                    UIManager.Instance.TackWarningUI("看看炮筒 小伙子");
                     UIManager.Instance.Tips(true, "长按 F 钻入大炮");
                     GameManager.Instance.player.ExitCannon(interactPoint);
                     havePlayer = false;
                 }
             }
         }
-
         private void OnDisable()
         {
 
         }
-
         private void Awake()
         {
             defaultRotaton = cannonBody.localRotation.eulerAngles;
             animator = GetComponent<Animator>();
         }
-        public void EnterInteract()
+        public void EnterInteract(PlayerController playerController)
         {
             GameInput.Instance.playerInputActions.Player.Interact.performed += Onperformed;
+            GameInput.Instance.playerInputActions.Player.Loading.performed += OnLoading;
             GameInput.Instance.MovementAction += InputInteract;
             GameInput.Instance.UseItemAction += Fire;
             GameManager.Instance.player.PlayerEnterInteract(interactPoint);
             spriteRenderer.sprite = ItemManager.Instance.defaultCannonSprite;
             CameraManager.Instance.ChangeCameraOffset(0.5f, 0.8f);
             UIManager.Instance.Tips(true, "长按 F 钻入大炮");
+            isInteractable = true;
         }
 
+        private void OnLoading(InputAction.CallbackContext context)
+        {
+            if (!haveBall && InventoryManager.Instance.HaveCannonBall)
+            {
+                UIManager.Instance.OpenProgressBar("装填中...");
+                loadingCoroutine = StartCoroutine(LoadingIE());
+            }
+        }
+        IEnumerator LoadingIE()
+        {
+            isLoading = true;
+            while (currentLoadTime < Setting.laodingTime)
+            {
+                currentLoadTime += Time.deltaTime;
+                UIManager.Instance.UpdateProgressBar(currentLoadTime / Setting.laodingTime);
+                yield return null;
+            }
+            isLoading = false;
+            currentLoadTime = 0;
+            haveBall = true;
+            InventoryManager.Instance.UseCannonball();
+            UIManager.Instance.CloseProgressBar();
+        }
         public void EnterWaitInteract()
         {
             spriteRenderer.sprite = ItemManager.Instance.selectCannonSprite;
@@ -86,6 +117,14 @@ namespace MyGame.ShipSystem.Cannon
             CameraManager.Instance.ChangeCameraOffset(0.5f, 0.5f);
             spriteRenderer.sprite = ItemManager.Instance.selectCannonSprite;
             UIManager.Instance.Tips(false, "");
+            isInteractable = false;
+            if (loadingCoroutine != null)
+            {
+                StopCoroutine(loadingCoroutine);
+                currentLoadTime = 0;
+                UIManager.Instance.CloseProgressBar();
+                isLoading = false;
+            }
         }
 
         public void ExitWaitInteract()
@@ -102,9 +141,10 @@ namespace MyGame.ShipSystem.Cannon
         }
         public void Fire()
         {
+            if (isLoading) return;
             if (havePlayer)
             {
-                GameManager.Instance.player.FirePlayer(firePoint.position, (firePoint.position - cannonBody.position).normalized);
+                player.FirePlayer(firePoint.position, (firePoint.position - cannonBody.position).normalized);
                 UIManager.Instance.Tips(false, string.Empty);
                 havePlayer = false;
                 return;
@@ -120,7 +160,7 @@ namespace MyGame.ShipSystem.Cannon
             }
             else
             {
-                //TODO:没有炮弹
+                UIManager.Instance.TackWarningUI("没有炮弹");
             }
         }
     }

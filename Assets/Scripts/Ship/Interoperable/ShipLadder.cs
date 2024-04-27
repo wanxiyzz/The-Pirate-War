@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using MyGame.PlayerSystem;
 using UnityEngine;
 namespace MyGame.ShipSystem
 {
@@ -8,7 +9,9 @@ namespace MyGame.ShipSystem
         public string Feature => "船梯";
         public bool IsSimple => false;
 
-        public void EnterInteract()
+        public bool IsInteractable => throw new System.NotImplementedException();
+
+        public void EnterInteract(PlayerController playerController)
         {
             GameManager.Instance.player.PlayerEnterInteract(null);
         }

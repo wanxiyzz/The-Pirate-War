@@ -1,12 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class Item : MonoBehaviour
+using System;
+namespace MyGame.Inventory
 {
-    public int itemID;
-    public string itemName;
-    public int itemAmount;
-    public Sprite itemIcon;
-    public int recoveryNum;
+    [Serializable]
+    public struct Item
+    {
+        public int itemID;
+        public int itemAmount;
+    }
+    [Serializable]
+    public class ItemDetail
+    {
+        public int itemID;
+        public string itemName;
+        public Sprite itemIcon;
+        public int recoveryNum;
+    }
 }

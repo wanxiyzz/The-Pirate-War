@@ -11,8 +11,12 @@ namespace MyGame.HandheldableSystem.WeaponSystem
             float halfAngle = bulletAngle / 2;
             for (int i = 0; i < bulletCount; i++)
             {
-                Bullet bullet = BulletPool.Instance.GetOwnSideBullet(attackPos, transform.localRotation);
-                bullet.Init(damage, Quaternion.AngleAxis(bulletAngle * (i - 3) + halfAngle, Vector3.forward) * direction);
+                Bullet bullet;
+                if (playerWeapon.Is2F)
+                    bullet = BulletPool.Instance.GetOwnSide2FBullet(attackPos, Quaternion.Euler(attackDir));
+                else
+                    bullet = BulletPool.Instance.GetOwnSideBullet(attackPos, Quaternion.Euler(attackDir));
+                bullet.Init(damage, Quaternion.AngleAxis(bulletAngle * (i - 3) + halfAngle, Vector3.forward) * attackDir);
             }
         }
     }

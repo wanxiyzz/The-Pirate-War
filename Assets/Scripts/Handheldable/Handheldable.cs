@@ -7,16 +7,14 @@ namespace MyGame.HandheldableSystem
     public abstract class Handheldable : MonoBehaviour
     {
         protected Vector2 mousePos;
-
-        protected Vector2 direction;
         protected bool canUsed;
         public float bufferTime = 0;
         public float currentBufferTime = 0;
-        protected void OnEnable()
+        protected virtual void OnEnable()
         {
             GameInput.Instance.UseItemAction += ItemUsed;
         }
-        protected void OnDisable()
+        protected virtual void OnDisable()
         {
             try
             {
@@ -30,9 +28,6 @@ namespace MyGame.HandheldableSystem
         }
         protected virtual void Aim()
         {
-            mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            direction = (mousePos - (Vector2)transform.position).normalized;
-            transform.right = direction;
             if (!canUsed)
             {
                 currentBufferTime -= Time.deltaTime;

@@ -21,7 +21,6 @@ namespace MyGame.InputSystem
             playerInputActions.Player.ChangeLastWeapon.performed += ChangeLastWeapon;
             playerInputActions.Player.UseItem.performed += UseItem;
         }
-
         private void ChangeLastWeapon(InputAction.CallbackContext context)
         {
             ChangeLastWeaponAction?.Invoke();

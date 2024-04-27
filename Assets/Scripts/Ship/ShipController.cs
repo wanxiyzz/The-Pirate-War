@@ -1,3 +1,4 @@
+using MyGame.ShipSystem.Anchor;
 using MyGame.ShipSystem.Hole;
 using MyGame.ShipSystem.Sail;
 using MyGame.UISystem;
@@ -9,23 +10,21 @@ namespace MyGame.ShipSystem
         //TRAN:船参数
         private ShipState shipState = new ShipState();
         [SerializeField] private float currentShipSpeed = 0;
-        [SerializeField] private bool dropAnchor;
         [SerializeField] private float shipSpeed = 5;
         [SerializeField] private float maxAngularVelocity;//最大角速度
         [SerializeField] private float angularVelocity;//当前角速度
         private Rigidbody2D rigi;
         [SerializeField] private ShipHoleManager shipHole;
         [SerializeField] ShipSail shipSail;
-        private
+        [SerializeField] ShipAnchor shipAnchor;
+        private Animator animator;
         void Start()
         {
+            animator = GetComponent<Animator>();
             shipSail = GetComponentInChildren<ShipSail>();
             rigi = GetComponent<Rigidbody2D>();
             shipHole = GetComponentInChildren<ShipHoleManager>();
-        }
-        void Update()
-        {
-
+            shipAnchor = GetComponentInChildren<ShipAnchor>();
         }
         private void FixedUpdate()
         {
@@ -44,27 +43,22 @@ namespace MyGame.ShipSystem
         /// </summary>
         private void Swerve(float torque)
         {
-            if (dropAnchor) return;
+            if (shipAnchor.dropAnchor)
+            {
+                rigi.velocity = Vector2.zero;
+                rigi.angularVelocity = 0;
+                animator.Play("Stop");
+                return;
+            }
             currentShipSpeed = shipSpeed * shipSail.sailValue;
+            if (currentShipSpeed > 2)
+            {
+                animator.Play("Moving");
+            }
             Vector2 direction = transform.right;
             rigi.velocity = direction * currentShipSpeed;
             angularVelocity = Mathf.Clamp(angularVelocity, -maxAngularVelocity, maxAngularVelocity);
             rigi.angularVelocity = angularVelocity;
-        }
-        /// <summary>
-        /// 下锚
-        /// </summary>
-        public void SetAnchor()
-        {
-            dropAnchor = true;
-            rigi.velocity = Vector2.zero;
-        }
-        /// <summary>
-        /// 起锚
-        /// </summary>
-        public void HoistAnchor()
-        {
-            dropAnchor = false;
         }
         public void TakeCannonball(Vector2 position)
         {
@@ -82,7 +76,6 @@ namespace MyGame.ShipSystem
             shipSail.HiddenSail();
             ShipWaterUI.Instance.OpenWaterUI(GetComponent<ShipTakeWater>());
             UIManager.Instance.OpenSailUI(shipSail);
-
         }
     }
 }

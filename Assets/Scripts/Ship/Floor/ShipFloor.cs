@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using MyGame.ShipSystem.Hole;
 using UnityEngine;
 namespace MyGame.ShipSystem.Floor
 {
@@ -13,6 +14,7 @@ namespace MyGame.ShipSystem.Floor
         private Collider2D[] shipButtomInteract;
         [SerializeField] PolygonCollider2D enterFloorCollider;
         [SerializeField] PolygonCollider2D exitFloorCollider;
+        [SerializeField] ShipHoleManager shipHoleManager;
         public bool isEnterFloor = false;
         private void Awake()
         {
@@ -32,6 +34,7 @@ namespace MyGame.ShipSystem.Floor
         }
         public void Enter2F()
         {
+            shipHoleManager.To2F();
             StartCoroutine(EnterFloorShip());
             GlobalLightManager.Instance.ChangeLightIntensity(0f);
             enterFloorCollider.enabled = false;
@@ -41,6 +44,7 @@ namespace MyGame.ShipSystem.Floor
         }
         public void Exit2F()
         {
+            shipHoleManager.To1F();
             StartCoroutine(ExitFloorShip());
             GlobalLightManager.Instance.ChangeLightIntensity(1f);
             enterFloorCollider.enabled = true;

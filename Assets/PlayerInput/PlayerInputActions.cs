@@ -107,6 +107,15 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Spyglass"",
+                    ""type"": ""Button"",
+                    ""id"": ""488351ff-e2ef-43e2-81ff-ab651024535a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -318,6 +327,17 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""action"": ""OpenBag"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""598daa3c-e385-43c2-ad8f-8f5a5b3e2cb4"",
+                    ""path"": ""<Keyboard>/t"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Spyglass"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -335,6 +355,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         m_Player_Lantern = m_Player.FindAction("Lantern", throwIfNotFound: true);
         m_Player_Bucket = m_Player.FindAction("Bucket", throwIfNotFound: true);
         m_Player_OpenBag = m_Player.FindAction("OpenBag", throwIfNotFound: true);
+        m_Player_Spyglass = m_Player.FindAction("Spyglass", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -403,6 +424,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Lantern;
     private readonly InputAction m_Player_Bucket;
     private readonly InputAction m_Player_OpenBag;
+    private readonly InputAction m_Player_Spyglass;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -416,6 +438,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         public InputAction @Lantern => m_Wrapper.m_Player_Lantern;
         public InputAction @Bucket => m_Wrapper.m_Player_Bucket;
         public InputAction @OpenBag => m_Wrapper.m_Player_OpenBag;
+        public InputAction @Spyglass => m_Wrapper.m_Player_Spyglass;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -452,6 +475,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @OpenBag.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnOpenBag;
                 @OpenBag.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnOpenBag;
                 @OpenBag.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnOpenBag;
+                @Spyglass.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSpyglass;
+                @Spyglass.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSpyglass;
+                @Spyglass.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSpyglass;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -483,6 +509,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @OpenBag.started += instance.OnOpenBag;
                 @OpenBag.performed += instance.OnOpenBag;
                 @OpenBag.canceled += instance.OnOpenBag;
+                @Spyglass.started += instance.OnSpyglass;
+                @Spyglass.performed += instance.OnSpyglass;
+                @Spyglass.canceled += instance.OnSpyglass;
             }
         }
     }
@@ -498,5 +527,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         void OnLantern(InputAction.CallbackContext context);
         void OnBucket(InputAction.CallbackContext context);
         void OnOpenBag(InputAction.CallbackContext context);
+        void OnSpyglass(InputAction.CallbackContext context);
     }
 }

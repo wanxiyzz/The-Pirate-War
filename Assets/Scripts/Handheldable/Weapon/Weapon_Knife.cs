@@ -5,9 +5,6 @@ namespace MyGame.HandheldableSystem.WeaponSystem
     {
         protected override void Aim()
         {
-            mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            direction = (mousePos - (Vector2)transform.position).normalized;
-            transform.right = direction;
             if (!canUsed)
             {
                 currentBufferTime -= Time.deltaTime;
@@ -41,7 +38,8 @@ namespace MyGame.HandheldableSystem.WeaponSystem
         }
         protected override void InstantiateAttack(Vector3 attackPos, Vector3 attackDir)
         {
-
+            if (playerWeapon.Is2F)
+                return;
         }
     }
 }

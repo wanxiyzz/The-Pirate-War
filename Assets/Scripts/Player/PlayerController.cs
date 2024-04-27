@@ -2,9 +2,7 @@ using MyGame.InputSystem;
 using MyGame.ShipSystem;
 using MyGame.UISystem;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
-using UnityEngine.Rendering.Universal;
 
 namespace MyGame.PlayerSystem
 {
@@ -14,13 +12,13 @@ namespace MyGame.PlayerSystem
         private Rigidbody2D rigi;
         private Animator animator;
         private PlayerState playerState = new PlayerState();
-        [SerializeField] private bool isMoveing;
+        public bool isMoveing;
         private int speed = 5;
         //Ship
-        [SerializeField] private Rigidbody2D shipRigi;
+        public string shipHomeName;
+        public Rigidbody2D shipRigi;
         private Vector2 shipPos;
         public bool isBoardShip; //是否在船上
-        public bool is2Floor;
 
         [SerializeField] private bool isInteract;
         [SerializeField] Transform interactTrans;
@@ -31,7 +29,8 @@ namespace MyGame.PlayerSystem
         public bool isFireSelf;
 
         [SerializeField] float decelerationRate = 10f;//减速率
-
+        public PlayerPos playerPos;
+        public PlayerWeapon playerWeapon;
         private void Start()
         {
             rigi = GetComponent<Rigidbody2D>();
@@ -61,9 +60,19 @@ namespace MyGame.PlayerSystem
                 }
             }
         }
+        private void Aim()
+        {
+            var direction = (Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position).normalized;
+            transform.right = (Vector2)direction;
+        }
         private void Interact(bool isInteract)
         {
             this.isInteract = isInteract;
+            if (!isInteract)
+            {
+                interactTrans = null;
+            }
+            Debug.Log(isInteract);
         }
         public void PlayerExitInetract()
         {
@@ -74,7 +83,8 @@ namespace MyGame.PlayerSystem
 
         public void PlayerEnterInteract(Transform interactTrans)
         {
-            this.interactTrans = interactTrans;
+            if (interactTrans != null)
+                this.interactTrans = interactTrans;
         }
         private void AdjustPlayerInteractPos()
         {
@@ -94,12 +104,13 @@ namespace MyGame.PlayerSystem
         public void To2Floor()
         {
             sortingGroup.sortingLayerName = "middleItem";
-            is2Floor = true;
+            playerPos = PlayerPos.Ship2F;
         }
         public void Exit2Floor()
         {
             sortingGroup.sortingLayerName = "topItem";
-            is2Floor = false;
+            playerPos = PlayerPos.Ship1F;
+
         }
         public void PlayerInputAction()
         {
@@ -117,6 +128,7 @@ namespace MyGame.PlayerSystem
                 rigi.velocity = isBoardShip ? shipRigi.velocity : Vector2.zero;
                 return;
             }
+            Aim();
             Vector2 playerVelocity = GameInput.Instance.GetMovementInput() * speed;
             isMoveing = playerVelocity != Vector2.zero;
             if (isBoardShip)
@@ -130,6 +142,7 @@ namespace MyGame.PlayerSystem
         /// </summary>
         public void BoardShip(Rigidbody2D shipRigi)
         {
+            playerPos = PlayerPos.Ship1F;
             var worldPos = transform.position;
             isBoardShip = true;
             this.shipRigi = shipRigi;
@@ -152,6 +165,7 @@ namespace MyGame.PlayerSystem
         /// </summary>
         public void LeaveShip()
         {
+            playerPos = PlayerPos.Sea;
             shipRigi.GetComponent<ShipController>().PlayerLeave();
             isBoardShip = false;
             shipRigi = null;
@@ -162,8 +176,9 @@ namespace MyGame.PlayerSystem
         /// 爬入大炮
         /// </summary>
         /// <param name="cannonTrans"></param>
-        public void EnterCannon(Transform cannonTrans)
+        public void EnterCannon(Transform cannonTrans, out PlayerController player)
         {
+            player = this;
             PlayerEnterInteract(cannonTrans);
             transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
             sortingGroup.sortingLayerName = "middleItem";

@@ -19,6 +19,22 @@ namespace MyGame.ShipSystem.Hole
             }
             return holesNum;
         }
+        public void To1F()
+        {
+            for (int i = 0; i < shipHoles.Length; i++)
+            {
+                shipHoles[i].boxCollider2D.enabled = false;
+            }
+        }
+        public void To2F()
+        {
+            for (int i = 0; i < shipHoles.Length; i++)
+            {
+                if (shipHoles[i].brokenLevel > 0)
+                    shipHoles[i].boxCollider2D.enabled = true;
+            }
+
+        }
         public void BrokenHole(Vector2 pos)
         {
             float minDistance = 10000;
@@ -34,7 +50,6 @@ namespace MyGame.ShipSystem.Hole
                 }
             }
             nearestHole.GetComponent<ShipHole>().Broken();
-            Debug.Log("nearestHole" + nearestHole.name);
         }
     }
 }

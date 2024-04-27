@@ -14,7 +14,13 @@ namespace MyGame.ShipSystem
         }
         private void ShipFlooded()
         {
-            waterValue += shipHoleManager.ShipFlooded() * Time.deltaTime * 0.01f;
+            waterValue += shipHoleManager.ShipFlooded() * Time.deltaTime * Setting.oneHoleWaterSpeed;
+            waterValue = Mathf.Clamp(waterValue, 0f, 1f);
+        }
+        public void TakeWater(float water)
+        {
+            waterValue -= water;
+            Debug.Log(waterValue);
             waterValue = Mathf.Clamp(waterValue, 0f, 1f);
         }
     }

@@ -1,4 +1,5 @@
 using MyGame.InputSystem;
+using MyGame.PlayerSystem;
 using UnityEngine;
 namespace MyGame.ShipSystem.Sail
 {
@@ -9,12 +10,17 @@ namespace MyGame.ShipSystem.Sail
         public string Feature => "收/放船帆";
 
         public bool IsSimple => false;
+
+        public bool IsInteractable => isInteractable;
+
         private ShipSail shipSail;
+        private bool isInteractable;
+
         private void Awake()
         {
             shipSail = GetComponentInParent<ShipSail>();
         }
-        public void EnterInteract()
+        public void EnterInteract(PlayerController playerController)
         {
             GameInput.Instance.MovementAction += InputInteract;
             GameManager.Instance.player.PlayerEnterInteract(tacksailPos);

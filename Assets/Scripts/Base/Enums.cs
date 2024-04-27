@@ -9,5 +9,17 @@ public enum WeaponSlotType
 }
 public enum HandHeld
 {
-    Weapon, Lantern, Bucket
+    Weapon = -1, Lantern, Bucket, Spyglass
+}
+public enum PlayerPos
+{
+    Ship1F, Ship2F, Sea
+}
+public enum SlotType
+{
+    Barrel, Bag
+}
+public enum BarrelType
+{
+    Normal, Board, CannonBall, Fruit
 }

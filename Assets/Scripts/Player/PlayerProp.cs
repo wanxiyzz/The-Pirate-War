@@ -7,38 +7,94 @@ namespace MyGame.PlayerSystem
 {
     public class PlayerProp : MonoBehaviour
     {
-        public Lantern lanternHolder;
+        public Handheldable[] handheldables;
         public HandHeld currentHandHeld;
+        public bool tackProp;
+        [SerializeField] PlayerWeapon playerWeapon;
         void Start()
         {
             currentHandHeld = HandHeld.Weapon;
             GameInput.Instance.playerInputActions.Player.Lantern.performed += TakeOutLantern;
+            GameInput.Instance.playerInputActions.Player.Spyglass.performed += TakeOutSpyglass;
+            GameInput.Instance.playerInputActions.Player.Bucket.performed += TakeOutBucket;
+            EventHandler.PlayerInetractive += OnPlayerInetractive;
+            EventHandler.PickUpAllItem += OnPlayerInetractive;
         }
+        private void OnPlayerInetractive(bool obj)
+        {
+            if (obj)
+            {
+                if (currentHandHeld != HandHeld.Weapon)
+                    PickUpProp();
+            }
+            else
+            {
+                if (currentHandHeld != HandHeld.Weapon)
+                    TakeOutProp((int)currentHandHeld);
+            }
 
+        }
+        private void TakeOutSpyglass(InputAction.CallbackContext context)
+        {
+            TackOutPorp(2);
+        }
+        private void TakeOutBucket(InputAction.CallbackContext context)
+        {
+            TackOutPorp(1);
+        }
         private void TakeOutLantern(InputAction.CallbackContext context)
         {
-            if (currentHandHeld == HandHeld.Lantern)
+            TackOutPorp(0);
+        }
+        private void TackOutPorp(int index)
+        {
+            if (currentHandHeld == (HandHeld)index)
             {
-                lanternHolder.PackUpLantern();
+                Debug.Log("收起道具");
+                PickUpProp();
                 currentHandHeld = HandHeld.Weapon;
                 TackOutWeapon();
             }
             else
             {
-                lanternHolder.TackOutLantern();
-                currentHandHeld = HandHeld.Lantern;
-                PickUpWeapon();
+                Debug.Log("拿出道具");
+                if (currentHandHeld == HandHeld.Weapon)
+                {
+                    currentHandHeld = (HandHeld)index;
+                    PickUpWeapon();
+                    Debug.Log("拿出" + (HandHeld)index);
+                    Debug.Log("拿出" + index);
+                    TakeOutProp(index);
+                }
+                else
+                {
+                    PickUpProp();
+                    currentHandHeld = (HandHeld)index;
+                    TakeOutProp(index);
+                    Debug.Log("拿出" + (HandHeld)index);
+                    Debug.Log("拿出" + index);
+                }
             }
         }
+        private void PickUpProp()
+        {
+            handheldables[(int)currentHandHeld].gameObject.SetActive(false);
+        }
+        private void TakeOutProp(int index)
+        {
+            Debug.Log(index);
+            handheldables[index].gameObject.SetActive(true);
+        }
+
         public void PickUpWeapon()
         {
-            PlayerWeapon.Instance.haveProp = true;
-            PlayerWeapon.Instance.PutWeapon();
+            playerWeapon.haveProp = true;
+            playerWeapon.PutWeapon();
         }
         public void TackOutWeapon()
         {
-            PlayerWeapon.Instance.haveProp = false;
-            PlayerWeapon.Instance.TakeoutWeapon();
+            playerWeapon.haveProp = false;
+            playerWeapon.TakeoutWeapon();
         }
 
     }

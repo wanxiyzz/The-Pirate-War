@@ -9,6 +9,7 @@ namespace MyGame.PlayerSystem
         private List<Iinteractable> interactables = new List<Iinteractable>();
         private Iinteractable currentInteractable;
         private bool isInteractive;
+        [SerializeField] PlayerController playerController;
 
         private void OnEnable()
         {
@@ -69,12 +70,13 @@ namespace MyGame.PlayerSystem
         {
             if (currentInteractable != null)
             {
+                if (currentInteractable.IsInteractable) return;
                 if (currentInteractable.IsSimple)
                 {
-                    currentInteractable.EnterInteract();
+                    currentInteractable.EnterInteract(playerController);
                     return;
                 }
-                currentInteractable.EnterInteract();
+                currentInteractable.EnterInteract(playerController);
                 Debug.Log("与" + currentInteractable.Feature + "交互");
                 EventHandler.CallPlayerInetractive(true);
                 UIManager.Instance.InteractTips(null);
