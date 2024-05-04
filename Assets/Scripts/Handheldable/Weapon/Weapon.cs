@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using MyGame.PlayerSystem;
+using Photon.Pun;
 
 namespace MyGame.HandheldableSystem.WeaponSystem
 {
@@ -46,18 +47,60 @@ namespace MyGame.HandheldableSystem.WeaponSystem
             currentBufferTime = 0;
             canUsed = true;
         }
+        public override void ItemUsedPun()
+        {
+            photonView.RPC("ItemUsed", RpcTarget.All);
+        }
+        [PunRPC]
         public override void ItemUsed()
         {
+            Debug.Log("Weapon Used");
             if (currentBullets > 0 && canUsed)
             {
                 currentBullets--;
                 currentBufferTime = bufferTime;
                 canUsed = false;
-                InstantiateAttack(muzzlePos.position, (Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position).normalized);
+                Vector3 dir = (Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position).normalized;
+                dir.z = 0;
+                InstantiateAttack(muzzlePos.position, dir);
                 UpdateBullet?.Invoke();
             }
         }
-
-        protected abstract void InstantiateAttack(Vector3 attackPos, Vector3 attackDir);
+        public abstract void InstantiateAttack(Vector3 attackPos, Vector3 attackDir);
+        protected Bullet InstantiateBullet(Vector3 attackPos, Vector3 attackDir)
+        {
+            Bullet bullet;
+            if (playerWeapon.IsEnemy)
+            {
+                if (playerWeapon.Is2F)
+                {
+                    float angle = Mathf.Atan2(attackDir.y, attackDir.x) * Mathf.Rad2Deg;
+                    Quaternion rotation = Quaternion.Euler(0, 0, angle);
+                    bullet = BulletPool.Instance.GetEnemy2FBullet(attackPos, rotation);
+                }
+                else
+                {
+                    float angle = Mathf.Atan2(attackDir.y, attackDir.x) * Mathf.Rad2Deg;
+                    Quaternion rotation = Quaternion.Euler(0, 0, angle);
+                    bullet = BulletPool.Instance.GetEnemyBullet(attackPos, rotation);
+                }
+            }
+            else
+            {
+                if (playerWeapon.Is2F)
+                {
+                    float angle = Mathf.Atan2(attackDir.y, attackDir.x) * Mathf.Rad2Deg;
+                    Quaternion rotation = Quaternion.Euler(0, 0, angle);
+                    bullet = BulletPool.Instance.GetOwnSide2FBullet(attackPos, rotation);
+                }
+                else
+                {
+                    float angle = Mathf.Atan2(attackDir.y, attackDir.x) * Mathf.Rad2Deg;
+                    Quaternion rotation = Quaternion.Euler(0, 0, angle);
+                    bullet = BulletPool.Instance.GetOwnSideBullet(attackPos, rotation);
+                }
+            }
+            return bullet;
+        }
     }
 }

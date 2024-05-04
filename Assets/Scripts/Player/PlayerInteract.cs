@@ -1,40 +1,71 @@
 using System.Collections.Generic;
 using MyGame.InputSystem;
 using MyGame.UISystem;
+using Photon.Pun;
 using UnityEngine;
 namespace MyGame.PlayerSystem
 {
-    public class PlayerInteract : MonoBehaviour
+    public class PlayerInteract : MonoBehaviourPun
     {
         private List<Iinteractable> interactables = new List<Iinteractable>();
-        private Iinteractable currentInteractable;
+        [SerializeField] private Iinteractable currentInteractable;
+        [SerializeField] private Iinteractable currentWaitInteractable;
         private bool isInteractive;
         [SerializeField] PlayerController playerController;
-
         private void OnEnable()
         {
-            GameInput.Instance.InteractAction += Interact;
-            EventHandler.EnterPlayerInteract += OnEnterPlayerInteract;
+            if (photonView.IsMine)
+            {
+                GameInput.Instance.InteractAction += Interact;
+                EventHandler.EnterPlayerInteract += OnEnterPlayerInteract;
+            }
         }
         private void OnDisable()
         {
-            GameInput.Instance.InteractAction -= Interact;
-            EventHandler.EnterPlayerInteract -= OnEnterPlayerInteract;
+            if (photonView.IsMine)
+            {
+                GameInput.Instance.InteractAction -= Interact;
+                EventHandler.EnterPlayerInteract -= OnEnterPlayerInteract;
+            }
         }
-
-
+        private void Update()
+        {
+            float scroll = Input.GetAxis("Mouse ScrollWheel");
+            if (scroll > 0f)
+            {
+                if (interactables.Count > 1)
+                {
+                    currentWaitInteractable.ExitWaitInteract();
+                    Debug.Log(interactables.Count);
+                    currentWaitInteractable = interactables[interactables.Count - 2];
+                    currentWaitInteractable.EnterWaitInteract();
+                    UIManager.Instance.InteractTips(currentWaitInteractable);
+                }
+            }
+        }
+        public void SelectLastItem()
+        {
+            if (interactables.Count > 1)
+            {
+                currentWaitInteractable.ExitWaitInteract();
+                Debug.Log(interactables.Count);
+                currentWaitInteractable = interactables[interactables.Count - 2];
+                currentWaitInteractable.EnterWaitInteract();
+                UIManager.Instance.InteractTips(currentWaitInteractable);
+            }
+        }
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (currentInteractable != null)
+            if (currentWaitInteractable != null)
             {
-                currentInteractable.ExitWaitInteract();
+                currentWaitInteractable.ExitWaitInteract();
             }
-            if (other.TryGetComponent<Iinteractable>(out currentInteractable))
+            if (other.TryGetComponent<Iinteractable>(out currentWaitInteractable))
             {
-                interactables.Add(currentInteractable);
-                currentInteractable.EnterWaitInteract();
+                interactables.Add(currentWaitInteractable);
+                currentWaitInteractable.EnterWaitInteract();
             }
-            UIManager.Instance.InteractTips(currentInteractable);
+            UIManager.Instance.InteractTips(currentWaitInteractable);
         }
         private void OnTriggerExit2D(Collider2D other)
         {
@@ -42,18 +73,24 @@ namespace MyGame.PlayerSystem
             if (other.TryGetComponent<Iinteractable>(out interactable))
             {
                 interactables.Remove(interactable);
-                if (interactable == currentInteractable)
+                if (interactable == currentWaitInteractable)
                 {
-                    currentInteractable.ExitWaitInteract();
+                    currentWaitInteractable.ExitWaitInteract();
                     if (interactables.Count > 0)
                     {
-                        currentInteractable = interactables[interactables.Count - 1];
-                        currentInteractable.EnterWaitInteract();
+                        currentWaitInteractable = interactables[interactables.Count - 1];
+                        currentWaitInteractable.EnterWaitInteract();
                     }
-                    else currentInteractable = null;
+                    else currentWaitInteractable = null;
+                }
+                if (interactable == currentInteractable)
+                {
+                    currentInteractable.ExitInteract();
+                    currentInteractable.ExitWaitInteract();
+                    currentInteractable = null;
                 }
             }
-            UIManager.Instance.InteractTips(currentInteractable);
+            UIManager.Instance.InteractTips(currentWaitInteractable);
         }
         private void Interact()
         {
@@ -68,16 +105,19 @@ namespace MyGame.PlayerSystem
         }
         private void EnterInetract()
         {
-            if (currentInteractable != null)
+            Debug.Log("进入交互");
+            if (currentWaitInteractable != null)
             {
-                if (currentInteractable.IsInteractable) return;
-                if (currentInteractable.IsSimple)
+                if (currentWaitInteractable.IsBoard && !playerController.isBoardShip) return;
+                if (currentWaitInteractable.IsInteractable) return;
+                if (currentWaitInteractable.IsSimple)
                 {
+                    currentInteractable = currentWaitInteractable;
                     currentInteractable.EnterInteract(playerController);
                     return;
                 }
+                currentInteractable = currentWaitInteractable;
                 currentInteractable.EnterInteract(playerController);
-                Debug.Log("与" + currentInteractable.Feature + "交互");
                 EventHandler.CallPlayerInetractive(true);
                 UIManager.Instance.InteractTips(null);
                 isInteractive = true;
@@ -85,9 +125,10 @@ namespace MyGame.PlayerSystem
         }
         public void ExitInteract()
         {
+            Debug.Log("退出交互");
             if (currentInteractable != null)
                 currentInteractable.ExitInteract();
-            UIManager.Instance.InteractTips(currentInteractable);
+            UIManager.Instance.InteractTips(currentWaitInteractable);
             EventHandler.CallPlayerInetractive(false);
             isInteractive = false;
         }

@@ -1,3 +1,4 @@
+using Photon.Pun;
 using UnityEngine;
 namespace MyGame.HandheldableSystem.WeaponSystem
 {
@@ -15,8 +16,16 @@ namespace MyGame.HandheldableSystem.WeaponSystem
             }
             CameraManager.Instance.CameraOffsetWithMouse();
         }
-
-        protected override void InstantiateAttack(Vector3 attackPos, Vector3 attackDir)
+        public override void ItemUsedPun()
+        {
+            photonView.RPC("ItemUsed", RpcTarget.All);
+        }
+        [PunRPC]
+        public override void ItemUsed()
+        {
+            base.ItemUsed();
+        }
+        public override void InstantiateAttack(Vector3 attackPos, Vector3 attackDir)
         {
             // 发射子弹
             int damage = 100;

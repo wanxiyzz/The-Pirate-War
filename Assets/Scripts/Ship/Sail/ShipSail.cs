@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using MyGame.UISystem;
+using Photon.Pun;
 using UnityEngine;
 namespace MyGame.ShipSystem.Sail
 {
-    public class ShipSail : MonoBehaviour
+    public class ShipSail : MonoBehaviourPun
     {
         public float sailValue = 1f;
         private SpriteRenderer sailSprite;
@@ -35,8 +36,13 @@ namespace MyGame.ShipSystem.Sail
         public void AddSailValue(float value)
         {
             sailValue += value;
+            photonView.RPC("PunSailValue", RpcTarget.All, sailValue);
             sailValue = Mathf.Clamp(sailValue, 0f, 1f);
         }
-
+        [PunRPC]
+        public void PunSailValue(float value)
+        {
+            sailValue = value;
+        }
     }
 }

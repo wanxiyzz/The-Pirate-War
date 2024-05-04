@@ -39,4 +39,9 @@ public class EventHandler
     {
         PickUpAllItem?.Invoke(value);
     }
+    public static event Action CountShipsAndPlayers;
+    public static void CallCountShipsAndPlayers()
+    {
+        CountShipsAndPlayers?.Invoke();
+    }
 }

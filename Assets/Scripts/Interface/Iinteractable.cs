@@ -5,6 +5,7 @@ public interface Iinteractable
     public bool IsInteractable { get; }
     public string Feature { get; }
     public bool IsSimple { get; }
+    public bool IsBoard { get; }
     public void EnterInteract(PlayerController playerController);
     public void ExitInteract();
     public void EnterWaitInteract();

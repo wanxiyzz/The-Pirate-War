@@ -2,23 +2,25 @@ using UnityEngine;
 using MyGame.InputSystem;
 using MyGame.UISystem;
 using MyGame.PlayerSystem;
-
+using Photon.Pun;
 namespace MyGame.ShipSystem
 {
-    public class Helm : MonoBehaviour, Iinteractable
+    public class Helm : MonoBehaviourPun, Iinteractable
     {
         [SerializeField] Transform takeHelmPos;
         [SerializeField] ShipController shipController;
-        [SerializeField] private float helmRotate = 0;
+        public float helmRotate = 0;
         [SerializeField] private float helmRotateSpeed = 0.5f;
         private SpriteRenderer spriteRenderer;
         private float helmRotateSpeedMax = 1;
-        private bool isInteractable;
+        public bool isInteractable;
 
         public string Feature => "使用船舵";
         public bool IsSimple => isInteractable;
 
         public bool IsInteractable => isInteractable;
+
+        public bool IsBoard => true;
 
         private void Start()
         {
@@ -30,8 +32,9 @@ namespace MyGame.ShipSystem
             UIManager.Instance.EnterHelm(helmRotate);
             GameManager.Instance.player.PlayerEnterInteract(takeHelmPos);
             spriteRenderer.color = Color.white;
-            isInteractable = true;
+            photonView.RPC("IsInteractableTrue", RpcTarget.All);
         }
+
 
         public void EnterWaitInteract()
         {
@@ -43,7 +46,7 @@ namespace MyGame.ShipSystem
             UIManager.Instance.ExitHelm();
             GameInput.Instance.MovementAction -= InputInteract;
             spriteRenderer.color = Color.green;
-            isInteractable = false;
+            photonView.RPC("IsInteractableFalse", RpcTarget.All);
         }
 
         public void ExitWaitInteract()
@@ -55,6 +58,7 @@ namespace MyGame.ShipSystem
         {
             helmRotate -= input.x * helmRotateSpeed * Time.deltaTime;
             helmRotate = Mathf.Clamp(helmRotate, -helmRotateSpeedMax, helmRotateSpeedMax);
+            photonView.RPC("PunHelmRotate", RpcTarget.All, helmRotate);
             if (helmRotate < 0.05f && helmRotate > -0.05f)
             {
                 UIManager.Instance.UpdateHeml(0);
@@ -66,5 +70,21 @@ namespace MyGame.ShipSystem
                 UIManager.Instance.UpdateHeml(helmRotate);
             }
         }
+        [PunRPC]
+        public void IsInteractableTrue()
+        {
+            this.isInteractable = true;
+        }
+        [PunRPC]
+        public void IsInteractableFalse()
+        {
+            this.isInteractable = false;
+        }
+        [PunRPC]
+        public void PunHelmRotate(float helmRotate)
+        {
+            this.helmRotate = helmRotate;
+        }
+
     }
 }

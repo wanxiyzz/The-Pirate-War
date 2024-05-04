@@ -13,6 +13,8 @@ namespace MyGame.ShipSystem.Sail
 
         public bool IsInteractable => isInteractable;
 
+        public bool IsBoard => true;
+
         private ShipSail shipSail;
         private bool isInteractable;
 
@@ -41,7 +43,6 @@ namespace MyGame.ShipSystem.Sail
 
         public void InputInteract(Vector2 input)
         {
-            Debug.Log(input);
             shipSail.AddSailValue(input.y * Time.deltaTime * shipSail.sailSpeed);
         }
     }

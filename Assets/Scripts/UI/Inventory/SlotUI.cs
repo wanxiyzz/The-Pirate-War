@@ -60,6 +60,7 @@ namespace MyGame.UISystem.InventoryUI
                     if (InventoryManager.Instance.GetItemDetails(currentItem.itemID).recoveryNum > 0)
                     {
                         UpdateSlotUI(InventoryManager.Instance.UseItemInBag(index));
+                        GameManager.Instance.player.ChangeHealth(currentItem.itemID);
                     }
                 }
             }
