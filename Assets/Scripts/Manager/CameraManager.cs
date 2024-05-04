@@ -25,7 +25,7 @@ public class CameraManager : Singleton<CameraManager>
         cinemaPerlin = vCam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
         cinemaPerlin.m_AmplitudeGain = 0;
     }
-    public void SetFollow(Transform player)
+    private void SetFollow(Transform player)
     {
         vCam.Follow = player;
     }

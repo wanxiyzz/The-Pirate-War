@@ -1,19 +1,8 @@
-using MyGame.PlayerSystem;
-using Photon.Pun;
 using UnityEngine;
 namespace MyGame.HandheldableSystem.WeaponSystem
 {
     public class Weapon_Knife : Weapon
     {
-        private Animator animator;
-        private void Start()
-        {
-            animator = GetComponent<Animator>();
-        }
-        public override void ItemUsedPun()
-        {
-            photonView.RPC("ItemUsed", RpcTarget.All);
-        }
         protected override void Aim()
         {
             if (!canUsed)
@@ -24,39 +13,33 @@ namespace MyGame.HandheldableSystem.WeaponSystem
                     canUsed = true;
                 }
             }
-        }
-        [PunRPC]
-        public override void ItemUsed()
-        {
-            Debug.Log("Weapon Used");
-            Debug.Log(canUsed);
-            if (canUsed)
+            else
             {
-                Vector3 dir = (Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position).normalized;
-                dir.z = 0;
-                InstantiateAttack(muzzlePos.position, dir);
-            }
-        }
-        public override void InstantiateAttack(Vector3 attackPos, Vector3 attackDir)
-        {
-            Debug.Log("Attack");
-            animator.Play("Attack");
-            canUsed = false;
-            currentBufferTime = bufferTime;
-        }
-        public string attackTag;
-        private void OnTriggerEnter2D(Collider2D other)
-        {
-            if (other.CompareTag(attackTag))
-            {
-                if (other.TryGetComponent<PlayerController>(out PlayerController player))
+                if (Input.GetMouseButtonDown(0) && Input.GetMouseButtonDown(1))
                 {
-                    if (playerWeapon.Is2F && player.playerPos == PlayerPos.Ship2F)
-                        player.ChangeHealth(-damage);
-                    else if (!playerWeapon.Is2F && player.playerPos == PlayerPos.Ship1F)
-                        player.ChangeHealth(-damage);
+                    //突刺
+                    canUsed = false;
+                    currentBufferTime = bufferTime;
+                    // animator.Play("Sprint");
+                }
+                else if (Input.GetMouseButtonDown(0))
+                {
+                    // animator.Play("Attack");
+                }
+                else if (Input.GetMouseButtonUp(2))
+                {
+                    // animator.Play("Defense");
                 }
             }
+        }
+        public override void ItemUsed()
+        {
+
+        }
+        protected override void InstantiateAttack(Vector3 attackPos, Vector3 attackDir)
+        {
+            if (playerWeapon.Is2F)
+                return;
         }
     }
 }

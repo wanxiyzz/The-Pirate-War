@@ -3,15 +3,15 @@ using MyGame.ShipSystem;
 using MyGame.UISystem;
 using UnityEngine;
 using UnityEngine.Rendering;
-using Photon.Pun;
-using Mygame.PlayerSystem;
 
 namespace MyGame.PlayerSystem
 {
-    public class PlayerController : MonoBehaviourPun, IPunObservable
+
+    public class PlayerController : MonoBehaviour
     {
-        public bool isEnemy;
         private Rigidbody2D rigi;
+        private Animator animator;
+        private PlayerState playerState = new PlayerState();
         public bool isMoveing;
         private int speed = 5;
         //Ship
@@ -31,64 +31,34 @@ namespace MyGame.PlayerSystem
         [SerializeField] float decelerationRate = 10f;//减速率
         public PlayerPos playerPos;
         public PlayerWeapon playerWeapon;
-        public PlayerHealth playerHealth;
-        public PlayerAnimation playerAnimation;
-        public bool isAnimation;
-        public GameObject playerInSeaEff;
-        [SerializeField] private PlayerBackShip playerBackShip;
-        private void Awake()
-        {
-            Debug.Log(GameManager.Instance);
-            if (photonView.IsMine)
-            {
-                GameManager.Instance.player = this;
-            }
-        }
         private void Start()
         {
-            playerAnimation = GetComponent<PlayerAnimation>();
-            playerHealth = GetComponent<PlayerHealth>();
             rigi = GetComponent<Rigidbody2D>();
             sortingGroup = GetComponent<SortingGroup>();
-            playerBackShip = GetComponent<PlayerBackShip>();
-            if (photonView.IsMine)
-                EventHandler.PlayerInetractive += Interact;
+
+            EventHandler.PlayerInetractive += Interact;
+            BoardShip(shipRigi);
         }
 
         void Update()
         {
-            if (photonView.IsMine)
-            {
-                PlayerInputAction();
-            }
+            PlayerInputAction();
         }
 
         private void LateUpdate()
         {
-            if (photonView.IsMine)
+            AdjustPlayerInteractPos();
+            if (isBoardShip)
             {
-                AdjustPlayerInteractPos();
-                if (isBoardShip)
+                if (isMoveing || isInteract)
                 {
-                    if (isMoveing || isInteract)
-                    {
-                        shipPos = transform.localPosition;
-                    }
-                    else
-                    {
-                        transform.localPosition = shipPos;
-                    }
+                    shipPos = transform.localPosition;
+                }
+                else
+                {
+                    transform.localPosition = shipPos;
                 }
             }
-        }
-
-        public void Init(Transform shipTrans)
-        {
-            ShipController shipController = shipTrans.GetComponent<ShipController>();
-            shipHomeName = shipController.shipName;
-            BoardShipPun(shipController.shipName);
-            playerBackShip.shipTrans = shipTrans;
-            playerBackShip.shipName = shipHomeName;
         }
         private void Aim()
         {
@@ -144,14 +114,12 @@ namespace MyGame.PlayerSystem
         }
         public void PlayerInputAction()
         {
-            if (isAnimation) return;
             if (isFireSelf)
             {
                 rigi.velocity -= rigi.velocity.normalized * decelerationRate * Time.deltaTime;
                 if (rigi.velocity.magnitude < 1f)
                 {
                     isFireSelf = false;
-                    playerPos = PlayerPos.Sea;
                 }
                 return;
             }
@@ -169,86 +137,40 @@ namespace MyGame.PlayerSystem
             }
             rigi.velocity = playerVelocity;
         }
-        public void BoardShipPun(string shipName)
-        {
-            photonView.RPC("BoardShip", RpcTarget.All, shipName);
-        }
-        public void BoardShipPun(string shipName, Vector2 pos)
-        {
-            photonView.RPC("BoardShip", RpcTarget.All, shipName, pos);
-        }
         /// <summary>
         /// 上船
         /// </summary>
-        [PunRPC]
-        public void BoardShip(string shipName)
+        public void BoardShip(Rigidbody2D shipRigi)
         {
-            var shipRigiBody2D = GameManager.Instance.Getship(shipName).GetComponent<Rigidbody2D>();
-            playerAnimation.BoardOrLeaveShip();
+            playerPos = PlayerPos.Ship1F;
             var worldPos = transform.position;
             isBoardShip = true;
-            this.shipRigi = shipRigiBody2D;
-            transform.parent = shipRigiBody2D.transform;
+            this.shipRigi = shipRigi;
+            transform.parent = shipRigi.transform;
             transform.position = worldPos;
             shipPos = transform.localPosition;
-            shipRigi.GetComponent<ShipController>().PlayerEnter(this);
-            playerPos = PlayerPos.Ship1F;
-            if (playerInSeaEff != null)
-                DestroyImmediate(playerInSeaEff, true);
+            shipRigi.GetComponent<ShipController>().PlayerEnter();
         }
-        [PunRPC]
-        public void BoardShip(string shipName, Vector2 pos)
+        public void BoardShip(Rigidbody2D shipRigi, Vector2 pos)
         {
-            var shipRigiBody2D = GameManager.Instance.Getship(shipName).GetComponent<Rigidbody2D>();
-            playerAnimation.BoardOrLeaveShip();
             isBoardShip = true;
-            this.shipRigi = shipRigiBody2D;
-            transform.parent = shipRigiBody2D.transform;
+            this.shipRigi = shipRigi;
+            transform.parent = shipRigi.transform;
             transform.position = pos;
             shipPos = transform.localPosition;
-            Debug.Log(shipPos);
-            shipRigi.GetComponent<ShipController>().PlayerEnter(this);
-            playerPos = PlayerPos.Ship1F;
-            if (playerInSeaEff != null)
-                DestroyImmediate(playerInSeaEff, true);
-        }
-        public void LeaveShipPun()
-        {
-            photonView.RPC("LeaveShip", RpcTarget.All);
-        }
-        public void LeaveShipPun(Vector2 pos)
-        {
-            photonView.RPC("LeaveShip", RpcTarget.All, pos);
+            shipRigi.GetComponent<ShipController>().PlayerEnter();
         }
         /// <summary>
         /// 离开船
         /// </summary>
-        [PunRPC]
         public void LeaveShip()
         {
-            Debug.Log("角色离开");
             playerPos = PlayerPos.Sea;
-            shipRigi.GetComponent<ShipController>().PlayerLeave(this);
+            shipRigi.GetComponent<ShipController>().PlayerLeave();
             isBoardShip = false;
             shipRigi = null;
             transform.parent = null;
             ShipWaterUI.Instance.CloseWaterUI();
-            playerInSeaEff = Instantiate(GameManager.Instance.playerInSeaEffect, transform.position, Quaternion.identity);
-            playerInSeaEff.GetComponent<PlayerInSeaEffect>().player = transform;
-        }
-        [PunRPC]
-        public void LeaveShip(Vector2 pos)
-        {
-            playerAnimation.BoardOrLeaveShip();
-            playerPos = PlayerPos.Sea;
-            shipRigi.GetComponent<ShipController>().PlayerLeave(this);
-            isBoardShip = false;
-            shipRigi = null;
-            transform.parent = null;
-            transform.position = pos;
-            ShipWaterUI.Instance.CloseWaterUI();
-            playerInSeaEff = Instantiate(GameManager.Instance.playerInSeaEffect, transform.position, Quaternion.identity);
-            playerInSeaEff.GetComponent<PlayerInSeaEffect>().player = transform;
         }
         /// <summary>
         /// 爬入大炮
@@ -259,7 +181,7 @@ namespace MyGame.PlayerSystem
             player = this;
             PlayerEnterInteract(cannonTrans);
             transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
-            sortingGroup.sortingLayerName = "buttom";
+            sortingGroup.sortingLayerName = "middleItem";
         }
         /// <summary>
         /// 爬出大炮
@@ -267,7 +189,7 @@ namespace MyGame.PlayerSystem
         public void ExitCannon(Transform exitPoint)
         {
             PlayerEnterInteract(exitPoint);
-            transform.localScale = new Vector3(1f, 1f, 1f);
+            transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
             sortingGroup.sortingLayerName = "topItem";
         }
         /// <summary>
@@ -275,7 +197,7 @@ namespace MyGame.PlayerSystem
         /// </summary>
         public void FirePlayer(Vector2 firePos, Vector2 dir)
         {
-            LeaveShipPun();
+            LeaveShip();
             Debug.Log("发射玩家");
             transform.position = firePos;
             transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
@@ -283,67 +205,6 @@ namespace MyGame.PlayerSystem
             PlayerExitInetract();
             isFireSelf = true;
             rigi.velocity = dir * Setting.playerFireSpeed;
-            playerPos = PlayerPos.None;
-        }
-        public void StartAnimation()
-        {
-            isAnimation = true;
-        }
-        public void EndAnimation()
-        {
-            isAnimation = false;
-        }
-        public void StartBackShipAnimation()
-        {
-            isAnimation = true;
-            sortingGroup.sortingLayerName = "sky";
-        }
-        public void EndBackShipAnimation()
-        {
-            isAnimation = false;
-            sortingGroup.sortingLayerName = "topItem";
-        }
-        //被攻击
-        [PunRPC]
-        public void ChangeHealth(int health)
-        {
-
-            playerHealth.ChangeHealth(health);
-        }
-        public void PlayerBackShip()
-        {
-            var ship = GameManager.Instance.Getship(shipHomeName);
-            Debug.Log(transform.position);
-            isBoardShip = true;
-            this.shipRigi = ship.GetComponent<Rigidbody2D>();
-            transform.parent = shipRigi.transform;
-            transform.position = ship.position;
-            shipPos = transform.localPosition;
-            Debug.Log(shipPos);
-            shipRigi.GetComponent<ShipController>().PlayerEnter(this);
-            playerPos = PlayerPos.Ship1F;
-            Destroy(playerInSeaEff);
-        }
-        public void FirePlayerBackShip()
-        {
-            PlayerExitInetract();
-            playerInSeaEff.gameObject.SetActive(false);
-            playerAnimation.FirePlayerBackShip();
-            transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
-        }
-
-        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-        {
-            if (stream.IsWriting)
-            {
-                stream.SendNext(isMoveing);
-                stream.SendNext(playerPos);
-            }
-            else
-            {
-                isMoveing = (bool)stream.ReceiveNext();
-                playerPos = (PlayerPos)stream.ReceiveNext();
-            }
         }
     }
 }

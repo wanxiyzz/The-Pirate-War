@@ -1,10 +1,9 @@
 using System.Collections;
+using System.Collections.Generic;
 using MyGame.Inventory;
 using MyGame.ShipSystem.Sail;
 using MyGame.UISystem.InventoryUI;
-using Photon.Pun;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 namespace MyGame.UISystem
 {
@@ -20,28 +19,11 @@ namespace MyGame.UISystem
         [SerializeField] GameObject waringUI;
         [SerializeField] BagUI bagUI;
         [SerializeField] BarrelUI barrelUI;
-        [SerializeField] HealthBar healthBarUI;
         public Image dragImage;
-        public GameObject allStartUI;
-        public GameObject startPanel;
-        public GameObject introdutcionUI;
-        public GameObject settingPanel;
-        public GameObject loadingUI;
-        public GameObject shipList;
-        public GameObject pauseUI;
         protected override void Awake()
         {
             base.Awake();
-            // SceneManager.LoadScene("Main", LoadSceneMode.Additive);
             dragImage.enabled = false;
-            healthBarUI = GetComponentInChildren<HealthBar>();
-        }
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                healthBarUI.ChangeHealth(50, 100);
-            }
         }
         private void OnEnable()
         {
@@ -65,15 +47,7 @@ namespace MyGame.UISystem
                 bagUI.CloseBagUI();
             }
         }
-        public void OpenLodingUI(string text)
-        {
-            loadingUI.SetActive(true);
-            loadingUI.GetComponentInChildren<Text>().text = text;
-        }
-        public void CloseLodingUI()
-        {
-            loadingUI.SetActive(false);
-        }
+
         private void OnOpenBarrelUI(Item[] items, bool value, BarrelType barrelType)
         {
             if (value)
@@ -159,44 +133,6 @@ namespace MyGame.UISystem
         public void TackWarningUI(string content)
         {
             Instantiate(waringUI, transform).GetComponent<UIWarning>().ShowWarning(content);
-        }
-        public void ChangeHealth(int currenHealth, int maxHealth)
-        {
-            healthBarUI.ChangeHealth(currenHealth, maxHealth);
-        }
-        public void EnterGame(string shipName)
-        {
-            OpenLodingUI("进入游戏中");
-            StartCoroutine(EnterGameCoroutine(shipName));
-        }
-
-        private IEnumerator EnterGameCoroutine(string shipName)
-        {
-            yield return new WaitForSeconds(1f);
-            GameManager.Instance.EnterGame(shipName);
-            CloseLodingUI();
-            allStartUI.SetActive(false);
-        }
-        public void OpenAllStartUI(bool isOpen)
-        {
-            allStartUI.SetActive(isOpen);
-        }
-        public void OpenStartPanel(bool isOpen)
-        {
-            startPanel.SetActive(isOpen);
-        }
-        public void BackTittle()
-        {
-            StartCoroutine(BackTittleIE());
-        }
-        IEnumerator BackTittleIE()
-        {
-            allStartUI.SetActive(true);
-            pauseUI.SetActive(false);
-            PhotonNetwork.Disconnect();
-            yield return SceneManager.UnloadSceneAsync("main");
-            yield return SceneManager.LoadSceneAsync("main");
-
         }
     }
 }

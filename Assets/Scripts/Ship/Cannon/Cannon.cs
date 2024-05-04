@@ -4,14 +4,13 @@ using MyGame.InputSystem;
 using MyGame.Inventory;
 using MyGame.PlayerSystem;
 using MyGame.UISystem;
-using Photon.Pun;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
 
 namespace MyGame.ShipSystem.Cannon
 {
-    public class Cannon : MonoBehaviourPun, Iinteractable, IPunObservable
+    public class Cannon : MonoBehaviour, Iinteractable
     {
         private Vector3 defaultRotaton;
         [SerializeField] float rotateSpeed;
@@ -24,18 +23,16 @@ namespace MyGame.ShipSystem.Cannon
 
 
         [SerializeField] SpriteRenderer spriteRenderer;
-        public bool haveBall = false;
+        [SerializeField] bool haveBall = false;
         [SerializeField] ParticleSystem grey;
 
 
         private Animator animator;
-        public bool havePlayer = false;
+        private bool havePlayer = false;
         public string Feature => "使用船炮";
         public bool IsSimple => false;
         public bool isInteractable;
         public bool IsInteractable => isInteractable;
-
-        public bool IsBoard => true;
 
         private PlayerController player;
         private float currentLoadTime;//Nop
@@ -50,14 +47,14 @@ namespace MyGame.ShipSystem.Cannon
                 {
                     GameManager.Instance.player.EnterCannon(transform, out player);
                     UIManager.Instance.Tips(true, "长按 F 退出大炮");
-                    photonView.RPC("PunHavePlayertrue", RpcTarget.All);
+                    havePlayer = true;
                 }
                 else
                 {
                     UIManager.Instance.TackWarningUI("看看炮筒 小伙子");
                     UIManager.Instance.Tips(true, "长按 F 钻入大炮");
                     GameManager.Instance.player.ExitCannon(interactPoint);
-                    photonView.RPC("PunHavePlayerfalse", RpcTarget.All);
+                    havePlayer = false;
                 }
             }
         }
@@ -75,12 +72,12 @@ namespace MyGame.ShipSystem.Cannon
             GameInput.Instance.playerInputActions.Player.Interact.performed += Onperformed;
             GameInput.Instance.playerInputActions.Player.Loading.performed += OnLoading;
             GameInput.Instance.MovementAction += InputInteract;
-            GameInput.Instance.UseItemAction += PunCannonFire;
+            GameInput.Instance.UseItemAction += Fire;
             GameManager.Instance.player.PlayerEnterInteract(interactPoint);
             spriteRenderer.sprite = ItemManager.Instance.defaultCannonSprite;
             CameraManager.Instance.ChangeCameraOffset(0.5f, 0.8f);
             UIManager.Instance.Tips(true, "长按 F 钻入大炮");
-            photonView.RPC("IsInteractableTrue", RpcTarget.All);
+            isInteractable = true;
         }
 
         private void OnLoading(InputAction.CallbackContext context)
@@ -102,34 +99,9 @@ namespace MyGame.ShipSystem.Cannon
             }
             isLoading = false;
             currentLoadTime = 0;
-            photonView.RPC("ReloadBall", RpcTarget.All);
+            haveBall = true;
             InventoryManager.Instance.UseCannonball();
             UIManager.Instance.CloseProgressBar();
-        }
-        [PunRPC]
-        public void ReloadBall()
-        {
-            haveBall = true;
-        }
-        [PunRPC]
-        public void PunHavePlayertrue()
-        {
-            this.havePlayer = true;
-        }
-        [PunRPC]
-        public void PunHavePlayerfalse()
-        {
-            this.havePlayer = false;
-        }
-        [PunRPC]
-        public void IsInteractableTrue()
-        {
-            this.isInteractable = true;
-        }
-        [PunRPC]
-        public void IsInteractableFalse()
-        {
-            this.isInteractable = false;
         }
         public void EnterWaitInteract()
         {
@@ -140,12 +112,12 @@ namespace MyGame.ShipSystem.Cannon
         {
             GameInput.Instance.playerInputActions.Player.Interact.performed -= Onperformed;
             GameInput.Instance.MovementAction -= InputInteract;
-            GameInput.Instance.UseItemAction -= PunCannonFire;
+            GameInput.Instance.UseItemAction -= Fire;
             CameraManager.Instance.ResetCamera();
             CameraManager.Instance.ChangeCameraOffset(0.5f, 0.5f);
             spriteRenderer.sprite = ItemManager.Instance.selectCannonSprite;
             UIManager.Instance.Tips(false, "");
-            photonView.RPC("IsInteractableFalse", RpcTarget.All);
+            isInteractable = false;
             if (loadingCoroutine != null)
             {
                 StopCoroutine(loadingCoroutine);
@@ -165,26 +137,16 @@ namespace MyGame.ShipSystem.Cannon
             CameraManager.Instance.RotateCamera(transform.rotation);
             steerAngle += input.x * Time.deltaTime * rotateSpeed;
             steerAngle = Mathf.Clamp(steerAngle, -maxSteerAngle, maxSteerAngle);
-            photonView.RPC("PunSteerAngle", RpcTarget.All, steerAngle);
             cannonBody.localRotation = Quaternion.Euler(defaultRotaton - new Vector3(0f, 0f, steerAngle));
         }
-        public void PunCannonFire()
+        public void Fire()
         {
-            photonView.RPC("CannonFire", RpcTarget.All);
-        }
-        [PunRPC]
-        public void CannonFire()
-        {
-            Debug.Log("火炮发射");
             if (isLoading) return;
             if (havePlayer)
             {
-                if (player == GameManager.Instance.player)
-                {
-                    player.FirePlayer(firePoint.position, (firePoint.position - cannonBody.position).normalized);
-                    UIManager.Instance.Tips(false, string.Empty);
-                    havePlayer = false;
-                }
+                player.FirePlayer(firePoint.position, (firePoint.position - cannonBody.position).normalized);
+                UIManager.Instance.Tips(false, string.Empty);
+                havePlayer = false;
                 return;
             }
             if (haveBall)
@@ -198,18 +160,8 @@ namespace MyGame.ShipSystem.Cannon
             }
             else
             {
-                if (player != null && player == GameManager.Instance.player)
-                    UIManager.Instance.TackWarningUI("没有炮弹");
+                UIManager.Instance.TackWarningUI("没有炮弹");
             }
-        }
-        [PunRPC]
-        public void PunSteerAngle(float angle)
-        {
-            steerAngle = angle;
-        }
-
-        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-        {
         }
     }
 }

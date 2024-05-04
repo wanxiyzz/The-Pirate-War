@@ -19,7 +19,7 @@ MonoBehaviour:
     AppIdVoice: 
     AppVersion: 
     UseNameServer: 1
-    FixedRegion: 
+    FixedRegion: cn
     Server: 
     Port: 0
     ProxyServer: 
@@ -28,7 +28,7 @@ MonoBehaviour:
     AuthMode: 0
     EnableLobbyStatistics: 0
     NetworkLogging: 1
-  DevRegion: jp
+  DevRegion: cn
   PunLogging: 0
   EnableSupportLogger: 0
   RunInBackground: 1
@@ -37,37 +37,8 @@ MonoBehaviour:
   - ClickRpc
   - DestroyRpc
   - DestroySpaceship
-  - RespawnSpaceship
-  - ChangeHealth
-  - FireHook
-  - Broken
-  - FixHole
-  - BoardShip
-  - LeaveShip
-  - OnHookSomething
-  - ChangeWeapon
-  - ExchangeWeapon
-  - SwitchLastWeapon
-  - TakeoutWeapon
-  - PickUpProp
-  - PutWeapon
-  - TackOutPorp
-  - ItemUsed
-  - CannonFire
-  - HarpoonFire
   - Fire
-  - TakeOutProp
-  - ReloadBall
-  - RPC_DropAnchor
-  - RPC_SetHavePlayer
-  - RPC_SetrotationPercent
-  - PunSteerAngle
-  - IsInteractableFalse
-  - IsInteractableTrue
-  - PunHavePlayerfalse
-  - PunHavePlayertrue
-  - PunHelmRotate
-  - PunSailValue
+  - RespawnSpaceship
   DisableAutoOpenWizard: 1
   ShowSettings: 1
-  DevRegionSetOnce: 1
+  DevRegionSetOnce: 0

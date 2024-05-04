@@ -1,16 +1,13 @@
-using System.Collections.Generic;
-using MyGame.PlayerSystem;
 using MyGame.ShipSystem.Anchor;
 using MyGame.ShipSystem.Hole;
 using MyGame.ShipSystem.Sail;
 using MyGame.UISystem;
-using Photon.Pun;
 using UnityEngine;
 namespace MyGame.ShipSystem
 {
-    public class ShipController : MonoBehaviourPun, IPunObservable
+    public class ShipController : MonoBehaviour
     {
-        public string shipName;
+        //TRAN:船参数
         private ShipState shipState = new ShipState();
         [SerializeField] private float currentShipSpeed = 0;
         [SerializeField] private float shipSpeed = 5;
@@ -21,7 +18,6 @@ namespace MyGame.ShipSystem
         [SerializeField] ShipSail shipSail;
         [SerializeField] ShipAnchor shipAnchor;
         private Animator animator;
-        private List<PlayerController> playerControllers = new List<PlayerController>();
         void Start()
         {
             animator = GetComponent<Animator>();
@@ -69,45 +65,17 @@ namespace MyGame.ShipSystem
             WoodClipPool.Instance.PrepareObject(position);
             shipHole.BrokenHole(position);
         }
-        public void PlayerLeave(PlayerController player)
+        public void PlayerLeave()
         {
             shipSail.RevealSail();
-            playerControllers.Remove(player);
-            if (player == GameManager.Instance.player)
-            {
-                ShipWaterUI.Instance.OpenWaterUI(GetComponent<ShipTakeWater>());
-                UIManager.Instance.CloseSailUI();
-            }
+            ShipWaterUI.Instance.OpenWaterUI(GetComponent<ShipTakeWater>());
+            UIManager.Instance.CloseSailUI();
         }
-        public void PlayerEnter(PlayerController player)
+        public void PlayerEnter()
         {
-            playerControllers.Add(player);
             shipSail.HiddenSail();
-            if (player == GameManager.Instance.player)
-            {
-                ShipWaterUI.Instance.OpenWaterUI(GetComponent<ShipTakeWater>());
-                UIManager.Instance.OpenSailUI(shipSail);
-            }
-        }
-        public void Shipwreck()
-        {
-            for (int i = 0; i < playerControllers.Count; i++)
-            {
-                playerControllers[i].LeaveShipPun();
-            }
-            playerControllers.Clear();
-        }
-
-        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-        {
-            if (stream.IsWriting)
-            {
-                stream.SendNext(shipName);
-            }
-            else
-            {
-                shipName = (string)stream.ReceiveNext();
-            }
+            ShipWaterUI.Instance.OpenWaterUI(GetComponent<ShipTakeWater>());
+            UIManager.Instance.OpenSailUI(shipSail);
         }
     }
 }

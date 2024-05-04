@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using MyGame.Inventory;
 using MyGame.PlayerSystem;
-using Photon.Pun;
 
 namespace MyGame.ItemSystem
 {
-    public class Barrel : MonoBehaviourPun, Iinteractable, IPunObservable
+    public class Barrel : MonoBehaviour, Iinteractable
     {
         public Item[] items;
         public BarrelType barrelType;
@@ -16,9 +15,6 @@ namespace MyGame.ItemSystem
         public string Feature => "查看木桶";
 
         public bool IsSimple => isInetractable;
-
-        public bool IsBoard => false;
-
         private bool isInetractable;
         private SpriteRenderer spriteRenderer;
         private void Awake()
@@ -49,18 +45,6 @@ namespace MyGame.ItemSystem
         }
         public void InputInteract(Vector2 input)
         {
-        }
-
-        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-        {
-            if (stream.IsWriting)
-            {
-                stream.SendNext(items);
-            }
-            else
-            {
-                items = (Item[])stream.ReceiveNext();
-            }
         }
     }
 }
