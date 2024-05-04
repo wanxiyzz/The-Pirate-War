@@ -49,7 +49,7 @@ namespace MyGame.ShipSystem.Hole
                     nearestHole = holeTran;
                 }
             }
-            nearestHole.GetComponent<ShipHole>().Broken();
+            nearestHole.GetComponent<ShipHole>().BrokenPun();
         }
     }
 }

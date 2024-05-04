@@ -1,11 +1,12 @@
 using MyGame.HandheldableSystem;
 using MyGame.InputSystem;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace MyGame.PlayerSystem
 {
-    public class PlayerProp : MonoBehaviour
+    public class PlayerProp : MonoBehaviourPun
     {
         public Handheldable[] handheldables;
         public HandHeld currentHandHeld;
@@ -46,6 +47,7 @@ namespace MyGame.PlayerSystem
         {
             TackOutPorp(0);
         }
+        [PunRPC]
         private void TackOutPorp(int index)
         {
             if (currentHandHeld == (HandHeld)index)
@@ -76,10 +78,12 @@ namespace MyGame.PlayerSystem
                 }
             }
         }
+        [PunRPC]
         private void PickUpProp()
         {
             handheldables[(int)currentHandHeld].gameObject.SetActive(false);
         }
+        [PunRPC]
         private void TakeOutProp(int index)
         {
             Debug.Log(index);
@@ -89,12 +93,12 @@ namespace MyGame.PlayerSystem
         public void PickUpWeapon()
         {
             playerWeapon.haveProp = true;
-            playerWeapon.PutWeapon();
+            playerWeapon.PutWeaponPun();
         }
         public void TackOutWeapon()
         {
             playerWeapon.haveProp = false;
-            playerWeapon.TakeoutWeapon();
+            playerWeapon.TakeoutWeaponPun();
         }
 
     }

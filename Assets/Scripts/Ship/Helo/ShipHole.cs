@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using MyGame.Inventory;
 using MyGame.PlayerSystem;
 using MyGame.UISystem;
+using Photon.Pun;
 using UnityEngine;
 
 namespace MyGame.ShipSystem.Hole
 {
-    public class ShipHole : MonoBehaviour, Iinteractable
+    public class ShipHole : MonoBehaviourPun, Iinteractable
     {
         public int brokenLevel = 0;
         private SpriteRenderer spriteRenderer;
@@ -17,6 +18,9 @@ namespace MyGame.ShipSystem.Hole
 
         private bool isInteractable;
         public bool IsInteractable => isInteractable;
+
+        public bool IsBoard => true;
+
         public float currentFixTime;
         public Coroutine currentFixCoroutine;
         public BoxCollider2D boxCollider2D;
@@ -82,6 +86,12 @@ namespace MyGame.ShipSystem.Hole
         public void InputInteract(Vector2 input)
         {
         }
+        public void BrokenPun()
+        {
+            if (photonView.IsMine)
+                photonView.RPC("Broken", RpcTarget.Others);
+        }
+        [PunRPC]
         public bool Broken()
         {
             if (brokenLevel < 2)
@@ -94,6 +104,11 @@ namespace MyGame.ShipSystem.Hole
             }
             return false;
         }
+        public void FixHolePun()
+        {
+            photonView.RPC("FixHole", RpcTarget.Others);
+        }
+        [PunRPC]
         public void FixHole()
         {
             brokenLevel = 0;

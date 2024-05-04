@@ -11,6 +11,8 @@ public class BulletBox : MonoBehaviour, Iinteractable
 
     public bool IsInteractable => false;
 
+    public bool IsBoard => true;
+
     private SpriteRenderer spriteRenderer;
     private void Awake()
     {

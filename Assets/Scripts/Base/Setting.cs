@@ -9,5 +9,6 @@ public class Setting
     public const float cannonballSpeed = 50f;
     public const int playerFireSpeed = 20;
     public const float barrelage = 0.15f;
-    public const float oneHoleWaterSpeed = 0.002f;
+    public const float oneHoleWaterSpeed = 0.01f;
+    public const float maxHarpoonLenght = 20f;
 }

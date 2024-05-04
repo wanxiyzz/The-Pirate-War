@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using MyGame.InputSystem;
+using Photon.Pun;
 using UnityEngine;
 namespace MyGame.HandheldableSystem
 {
-    public abstract class Handheldable : MonoBehaviour
+    public abstract class Handheldable : MonoBehaviourPun
     {
         protected Vector2 mousePos;
         protected bool canUsed;
@@ -12,19 +13,28 @@ namespace MyGame.HandheldableSystem
         public float currentBufferTime = 0;
         protected virtual void OnEnable()
         {
-            GameInput.Instance.UseItemAction += ItemUsed;
+            if (photonView.IsMine)
+                GameInput.Instance.UseItemAction += ItemUsedPun;
         }
         protected virtual void OnDisable()
         {
-            try
+            if (photonView.IsMine)
             {
-                GameInput.Instance.UseItemAction -= ItemUsed;
+                try
+                {
+                    GameInput.Instance.UseItemAction -= ItemUsedPun;
+                }
+                catch { }
             }
-            catch { }
         }
         protected void Update()
         {
-            Aim();
+            if (photonView.IsMine)
+                Aim();
+            else
+            {
+                canUsed = true;
+            }
         }
         protected virtual void Aim()
         {
@@ -37,6 +47,11 @@ namespace MyGame.HandheldableSystem
                 }
             }
         }
+        public virtual void ItemUsedPun()
+        {
+            photonView.RPC("ItemUsed", RpcTarget.All);
+        }
+        [PunRPC]
         public virtual void ItemUsed()
         {
             if (canUsed)

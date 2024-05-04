@@ -7,12 +7,26 @@ namespace MyGame.ShipSystem
     public class ShipLadder : MonoBehaviour, Iinteractable
     {
         public string Feature => "船梯";
-        public bool IsSimple => false;
+        public bool IsSimple => true;
 
-        public bool IsInteractable => throw new System.NotImplementedException();
+        public bool IsInteractable => false;
 
+        public bool IsBoard => false;
+
+        [SerializeField] Transform leavePoint;
+        [SerializeField] Transform enterPoint;
+        [SerializeField] Rigidbody2D shipRigi;
+        [SerializeField] ShipController shipController;
         public void EnterInteract(PlayerController playerController)
         {
+            if (playerController.playerPos == PlayerPos.Ship1F)
+            {
+                playerController.LeaveShipPun(leavePoint.position);
+            }
+            else
+            {
+                playerController.BoardShipPun(shipController.name, enterPoint.position);
+            }
             GameManager.Instance.player.PlayerEnterInteract(null);
         }
 

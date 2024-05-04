@@ -31,7 +31,6 @@ namespace MyGame.HandheldableSystem.WeaponSystem
         }
         public Bullet GetOwnSide2FBullet(Vector3 position, Quaternion rotation)
         {
-            Debug.Log("发出2楼的子弹");
             return OwnSide2FBulletPool.PrepareObject(position, rotation);
         }
         public Bullet GetEnemy2FBullet(Vector3 position, Quaternion rotation)

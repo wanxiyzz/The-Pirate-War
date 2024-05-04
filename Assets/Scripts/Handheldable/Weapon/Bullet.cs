@@ -25,7 +25,7 @@ namespace MyGame.HandheldableSystem.WeaponSystem
         {
             if (other.CompareTag(attackTag))
             {
-                if (other.TryGetComponent<PlayerState>(out PlayerState player))
+                if (other.TryGetComponent<PlayerController>(out PlayerController player))
                 {
                     if (is2F && player.playerPos == PlayerPos.Ship2F)
                         player.ChangeHealth(-damage);
@@ -34,6 +34,7 @@ namespace MyGame.HandheldableSystem.WeaponSystem
                 }
                 gameObject.SetActive(false);
             }
+            gameObject.SetActive(false);
         }
         private IEnumerator Eliminate()
         {

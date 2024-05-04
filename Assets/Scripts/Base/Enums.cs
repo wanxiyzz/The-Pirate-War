@@ -13,7 +13,7 @@ public enum HandHeld
 }
 public enum PlayerPos
 {
-    Ship1F, Ship2F, Sea
+    Ship1F, Ship2F, Sea, None
 }
 public enum SlotType
 {
@@ -22,4 +22,8 @@ public enum SlotType
 public enum BarrelType
 {
     Normal, Board, CannonBall, Fruit
+}
+public enum PlayerType
+{
+    Self, Teammate, Enemy
 }

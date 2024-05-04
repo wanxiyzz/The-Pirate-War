@@ -1,3 +1,4 @@
+using Photon.Pun;
 using UnityEngine;
 
 namespace MyGame.HandheldableSystem.WeaponSystem
@@ -6,7 +7,11 @@ namespace MyGame.HandheldableSystem.WeaponSystem
     {
         [SerializeField] private float bulletAngle = 10;
         [SerializeField] private const int bulletCount = 6;
-        protected override void InstantiateAttack(Vector3 attackPos, Vector3 attackDir)
+        public override void ItemUsedPun()
+        {
+            photonView.RPC("ItemUsed", RpcTarget.All);
+        }
+        public override void InstantiateAttack(Vector3 attackPos, Vector3 attackDir)
         {
             float halfAngle = bulletAngle / 2;
             for (int i = 0; i < bulletCount; i++)
@@ -18,6 +23,11 @@ namespace MyGame.HandheldableSystem.WeaponSystem
                     bullet = BulletPool.Instance.GetOwnSideBullet(attackPos, Quaternion.Euler(attackDir));
                 bullet.Init(damage, Quaternion.AngleAxis(bulletAngle * (i - 3) + halfAngle, Vector3.forward) * attackDir);
             }
+        }
+        [PunRPC]
+        public override void ItemUsed()
+        {
+            base.ItemUsed();
         }
     }
 }
