@@ -15,8 +15,6 @@ public class GameManager : Singleton<GameManager>
     public PlayerController player;
     public GameObject backPlayerCannon;
     public Dictionary<string, Transform> ships = new Dictionary<string, Transform>();
-    public Transform[] shipResetPoint;
-    [SerializeField] Transform shiptranform;
     [SerializeField] Transform[] shipResetPoints;
     [SerializeField] LayerMask layerMask;
     protected override void Awake()
@@ -38,6 +36,7 @@ public class GameManager : Singleton<GameManager>
     public void EnterGame(string shipName)
     {
         Debug.Log("进入游戏");
+        this.shipName = shipName;
         StartCoroutine(EnterGameCoroutine(shipName));
     }
     IEnumerator EnterGameCoroutine(string shipName)
@@ -97,6 +96,13 @@ public class GameManager : Singleton<GameManager>
                     Debug.Log(shipController.shipName);
                     Debug.Log("创建成功");
                 }
+                else
+                {
+                    ships[shipName] = shipGameObject.transform;
+                    ShipController shipController = shipGameObject.GetComponent<ShipController>();
+                    shipController.shipName = shipName;
+                    Debug.Log("创建成功");
+                }
                 break;
             }
         }
@@ -104,8 +110,10 @@ public class GameManager : Singleton<GameManager>
     }
     public Transform Getship(string shipName)
     {
+        Debug.Log(shipName);
         if (ships.ContainsKey(shipName))
         {
+            Debug.Log("有船");
             return ships[shipName];
         }
         else
@@ -117,6 +125,7 @@ public class GameManager : Singleton<GameManager>
             }
             else
             {
+                Debug.Log("没有船");
                 return null;
             }
         }

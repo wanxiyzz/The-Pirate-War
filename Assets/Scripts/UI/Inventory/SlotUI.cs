@@ -44,7 +44,7 @@ namespace MyGame.UISystem.InventoryUI
                 iconImage.enabled = false;
             }
         }
-
+        //TODO:FU
         private void OnClick()
         {
             if (slotType == SlotType.Bag)

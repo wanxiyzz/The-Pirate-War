@@ -23,15 +23,18 @@ namespace MyGame.PlayerSystem
         }
         private void OnPlayerInetractive(bool obj)
         {
-            if (obj)
+            if (photonView.IsMine)
             {
-                if (currentHandHeld != HandHeld.Weapon)
-                    PickUpProp();
-            }
-            else
-            {
-                if (currentHandHeld != HandHeld.Weapon)
-                    TakeOutProp((int)currentHandHeld);
+                if (obj)
+                {
+                    if (currentHandHeld != HandHeld.Weapon)
+                        PickUpProp();
+                }
+                else
+                {
+                    if (currentHandHeld != HandHeld.Weapon)
+                        TakeOutProp((int)currentHandHeld);
+                }
             }
 
         }

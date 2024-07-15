@@ -48,6 +48,7 @@ namespace MyGame.PlayerSystem
         {
             isDead = true;
             playerHealth = 0;
+            PhotonNetwork.Destroy(gameObject);
         }
     }
 }

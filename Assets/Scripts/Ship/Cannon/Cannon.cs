@@ -17,7 +17,6 @@ namespace MyGame.ShipSystem.Cannon
         [SerializeField] float rotateSpeed;
         [SerializeField] float steerAngle;
         [SerializeField] float maxSteerAngle;
-
         [SerializeField] Transform cannonBody;
         [SerializeField] Transform interactPoint;
         [SerializeField] Transform firePoint;
@@ -72,6 +71,7 @@ namespace MyGame.ShipSystem.Cannon
         }
         public void EnterInteract(PlayerController playerController)
         {
+            player = playerController;
             GameInput.Instance.playerInputActions.Player.Interact.performed += Onperformed;
             GameInput.Instance.playerInputActions.Player.Loading.performed += OnLoading;
             GameInput.Instance.MovementAction += InputInteract;
@@ -106,6 +106,49 @@ namespace MyGame.ShipSystem.Cannon
             InventoryManager.Instance.UseCannonball();
             UIManager.Instance.CloseProgressBar();
         }
+
+        public void EnterWaitInteract()
+        {
+            spriteRenderer.sprite = ItemManager.Instance.selectCannonSprite;
+        }
+
+        public void ExitInteract()
+        {
+            GameInput.Instance.playerInputActions.Player.Interact.performed -= Onperformed;
+            GameInput.Instance.MovementAction -= InputInteract;
+            GameInput.Instance.UseItemAction -= PunCannonFire;
+            CameraManager.Instance.ResetCamera();
+            CameraManager.Instance.ChangeCameraOffset(0.5f, 0.5f);
+            spriteRenderer.sprite = ItemManager.Instance.selectCannonSprite;
+            UIManager.Instance.Tips(false, "");
+            photonView.RPC("IsInteractableFalse", RpcTarget.All);
+            if (loadingCoroutine != null)
+            {
+                StopCoroutine(loadingCoroutine);
+                currentLoadTime = 0;
+                UIManager.Instance.CloseProgressBar();
+                isLoading = false;
+            }
+            player = null;
+        }
+
+        public void ExitWaitInteract()
+        {
+            spriteRenderer.sprite = ItemManager.Instance.defaultCannonSprite;
+        }
+
+        public void InputInteract(Vector2 input)
+        {
+            CameraManager.Instance.RotateCamera(transform.rotation);
+            steerAngle += input.x * Time.deltaTime * rotateSpeed;
+            steerAngle = Mathf.Clamp(steerAngle, -maxSteerAngle, maxSteerAngle);
+            photonView.RPC("PunSteerAngle", RpcTarget.All, steerAngle);
+            cannonBody.localRotation = Quaternion.Euler(defaultRotaton - new Vector3(0f, 0f, steerAngle));
+        }
+        public void PunCannonFire()
+        {
+            photonView.RPC("CannonFire", RpcTarget.All);
+        }
         [PunRPC]
         public void ReloadBall()
         {
@@ -131,47 +174,6 @@ namespace MyGame.ShipSystem.Cannon
         {
             this.isInteractable = false;
         }
-        public void EnterWaitInteract()
-        {
-            spriteRenderer.sprite = ItemManager.Instance.selectCannonSprite;
-        }
-
-        public void ExitInteract()
-        {
-            GameInput.Instance.playerInputActions.Player.Interact.performed -= Onperformed;
-            GameInput.Instance.MovementAction -= InputInteract;
-            GameInput.Instance.UseItemAction -= PunCannonFire;
-            CameraManager.Instance.ResetCamera();
-            CameraManager.Instance.ChangeCameraOffset(0.5f, 0.5f);
-            spriteRenderer.sprite = ItemManager.Instance.selectCannonSprite;
-            UIManager.Instance.Tips(false, "");
-            photonView.RPC("IsInteractableFalse", RpcTarget.All);
-            if (loadingCoroutine != null)
-            {
-                StopCoroutine(loadingCoroutine);
-                currentLoadTime = 0;
-                UIManager.Instance.CloseProgressBar();
-                isLoading = false;
-            }
-        }
-
-        public void ExitWaitInteract()
-        {
-            spriteRenderer.sprite = ItemManager.Instance.defaultCannonSprite;
-        }
-
-        public void InputInteract(Vector2 input)
-        {
-            CameraManager.Instance.RotateCamera(transform.rotation);
-            steerAngle += input.x * Time.deltaTime * rotateSpeed;
-            steerAngle = Mathf.Clamp(steerAngle, -maxSteerAngle, maxSteerAngle);
-            photonView.RPC("PunSteerAngle", RpcTarget.All, steerAngle);
-            cannonBody.localRotation = Quaternion.Euler(defaultRotaton - new Vector3(0f, 0f, steerAngle));
-        }
-        public void PunCannonFire()
-        {
-            photonView.RPC("CannonFire", RpcTarget.All);
-        }
         [PunRPC]
         public void CannonFire()
         {
@@ -184,6 +186,7 @@ namespace MyGame.ShipSystem.Cannon
                     player.FirePlayer(firePoint.position, (firePoint.position - cannonBody.position).normalized);
                     UIManager.Instance.Tips(false, string.Empty);
                     havePlayer = false;
+                    player = null;
                 }
                 return;
             }

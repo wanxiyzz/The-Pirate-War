@@ -19,6 +19,10 @@ namespace MyGame.PlayerSystem
                 GameInput.Instance.InteractAction += Interact;
                 EventHandler.EnterPlayerInteract += OnEnterPlayerInteract;
             }
+            else
+            {
+                GetComponent<CircleCollider2D>().enabled = false;
+            }
         }
         private void OnDisable()
         {

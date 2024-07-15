@@ -18,6 +18,7 @@ namespace MyGame.ShipSystem.Floor
         public bool isEnterFloor = false;
         private void Awake()
         {
+            //TODO:FU
             shipTopSprites = topParent.GetComponentsInChildren<SpriteRenderer>();
             shipButtomSprites = ButtomParent.GetComponentsInChildren<SpriteRenderer>();
             shipTopInteract = topParent.GetComponentsInChildren<Collider2D>();

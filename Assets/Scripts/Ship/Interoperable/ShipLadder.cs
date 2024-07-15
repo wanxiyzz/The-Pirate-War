@@ -25,7 +25,7 @@ namespace MyGame.ShipSystem
             }
             else
             {
-                playerController.BoardShipPun(shipController.name, enterPoint.position);
+                playerController.BoardShipPun(shipController.shipName, enterPoint.position);
             }
             GameManager.Instance.player.PlayerEnterInteract(null);
         }

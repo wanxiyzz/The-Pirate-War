@@ -2954,7 +2954,7 @@ MonoBehaviour:
   leavePoint: {fileID: 9147295249217087707}
   enterPoint: {fileID: 8702064150180145099}
   shipRigi: {fileID: 6554274373057089034}
-  shipController: {fileID: 0}
+  shipController: {fileID: 6554274373057089031}
 --- !u!61 &4645771647995365006
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3159,8 +3159,8 @@ GameObject:
   - component: {fileID: 3023174210549404321}
   - component: {fileID: 5655349404363741291}
   - component: {fileID: 2512602080134429249}
-  - component: {fileID: 4195280223486659424}
-  - component: {fileID: 8860511198305841623}
+  - component: {fileID: 2322391101607449686}
+  - component: {fileID: 6587406321299698586}
   m_Layer: 11
   m_Name: Ship
   m_TagString: Ship
@@ -3366,28 +3366,12 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 6554274373057089031}
   - {fileID: 3023174210549404321}
-  - {fileID: 4195280223486659424}
-  - {fileID: 8860511198305841623}
+  - {fileID: 2322391101607449686}
+  - {fileID: 6587406321299698586}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &4195280223486659424
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6554274373057089025}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
-  m_UseLocal: 1
---- !u!114 &8860511198305841623
+--- !u!114 &2322391101607449686
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3401,8 +3385,41 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_SynchronizeVelocity: 1
   m_SynchronizeAngularVelocity: 1
-  m_TeleportEnabled: 0
+  m_TeleportEnabled: 1
   m_TeleportIfDistanceGreaterThan: 3
+--- !u!114 &6587406321299698586
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6554274373057089025}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8efc6b1d64977384eb3405357896c656, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_PositionModel:
+    SynchronizeEnabled: 1
+    TeleportEnabled: 1
+    TeleportIfDistanceGreaterThan: 3
+    InterpolateOption: 4
+    InterpolateMoveTowardsSpeed: 1
+    InterpolateLerpSpeed: 4
+    ExtrapolateOption: 2
+    ExtrapolateSpeed: 7
+    ExtrapolateIncludingRoundTripTime: 1
+    ExtrapolateNumberOfStoredPositions: 1
+  m_RotationModel:
+    SynchronizeEnabled: 1
+    InterpolateOption: 1
+    InterpolateRotateTowardsSpeed: 180
+    InterpolateLerpSpeed: 5
+  m_ScaleModel:
+    SynchronizeEnabled: 0
+    InterpolateOption: 0
+    InterpolateMoveTowardsSpeed: 1
+    InterpolateLerpSpeed: 0
 --- !u!1 &6554274373183422237
 GameObject:
   m_ObjectHideFlags: 0
@@ -4559,6 +4576,10 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2183137001168635520, guid: f234921c4536f8748a5027173de8a1bb, type: 3}
       propertyPath: sceneViewId
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2183137001168635520, guid: f234921c4536f8748a5027173de8a1bb, type: 3}
+      propertyPath: ObservedComponents.Array.size
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3086784745855333021, guid: f234921c4536f8748a5027173de8a1bb, type: 3}

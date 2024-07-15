@@ -50,17 +50,13 @@ namespace MyGame.ItemSystem
         public void InputInteract(Vector2 input)
         {
         }
+        [PunRPC]
+        public void OnChange()
+        {
+        }
 
         public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
         {
-            if (stream.IsWriting)
-            {
-                stream.SendNext(items);
-            }
-            else
-            {
-                items = (Item[])stream.ReceiveNext();
-            }
         }
     }
 }

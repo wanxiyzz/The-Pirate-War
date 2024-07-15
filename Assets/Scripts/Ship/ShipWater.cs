@@ -19,7 +19,7 @@ namespace MyGame.ShipSystem
         }
         void Update()
         {
-
+            //TODO:FU
             if (shipTakeWater.waterValue < 0.4f)
             {
                 waterRenderer.sortingLayerName = "middleItem";

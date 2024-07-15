@@ -1,9 +1,11 @@
 using System.Collections;
+using MyGame.InputSystem;
 using MyGame.Inventory;
 using MyGame.ShipSystem.Sail;
 using MyGame.UISystem.InventoryUI;
 using Photon.Pun;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 namespace MyGame.UISystem
@@ -38,17 +40,36 @@ namespace MyGame.UISystem
         }
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (Input.GetKeyDown(KeyCode.Space))
             {
-                healthBarUI.ChangeHealth(50, 100);
+                Debug.Log(PhotonNetwork.GetPing());
             }
         }
         private void OnEnable()
         {
             EventHandler.OpenBarrelUI += OnOpenBarrelUI;
             EventHandler.OpenBagUI += OnOpenOpenBagUI;
+            GameInput.Instance.playerInputActions.Player.Esc.performed += OnPauseUI;
         }
 
+        private void OnPauseUI(InputAction.CallbackContext context)
+        {
+            if (allStartUI.activeSelf)
+            {
+                return;
+            }
+            else
+            {
+                if (pauseUI.activeSelf)
+                {
+                    pauseUI.SetActive(false);
+                }
+                else
+                {
+                    pauseUI.SetActive(true);
+                }
+            }
+        }
         private void OnDisable()
         {
             EventHandler.OpenBarrelUI -= OnOpenBarrelUI;

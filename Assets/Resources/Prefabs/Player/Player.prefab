@@ -184,7 +184,7 @@ GameObject:
   - component: {fileID: 1641829398444324330}
   - component: {fileID: 4565483897827686342}
   - component: {fileID: 7212840295821561895}
-  - component: {fileID: 4461826049905772017}
+  - component: {fileID: 2130017126889471620}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -202,7 +202,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.42336696, y: 0.25897408, z: 0.024960157}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5878983320362012675}
@@ -323,6 +323,7 @@ MonoBehaviour:
   shipHomeName: 
   shipRigi: {fileID: 0}
   isBoardShip: 0
+  defaultScale: {x: 0, y: 0, z: 0}
   isInteract: 0
   interactTrans: {fileID: 0}
   sortingGroup: {fileID: 1227921684}
@@ -396,9 +397,8 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 0
   ObservedComponents:
-  - {fileID: 4461826049905772017}
+  - {fileID: 2130017126889471620}
   - {fileID: 5878983320714814005}
-  - {fileID: 0}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -421,7 +421,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2130176
   backShipCannonTrans: {fileID: 0}
---- !u!114 &4461826049905772017
+--- !u!114 &2130017126889471620
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -436,7 +436,7 @@ MonoBehaviour:
   m_SynchronizePosition: 1
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 1
-  m_UseLocal: 0
+  m_UseLocal: 1
 --- !u!1 &5878983322278288132
 GameObject:
   m_ObjectHideFlags: 0
@@ -568,7 +568,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   handheldables:
-  - {fileID: 0}
+  - {fileID: 1059051913004302354}
   - {fileID: 606987371}
   - {fileID: 917043325}
   currentHandHeld: -1
@@ -1103,6 +1103,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7503160395144556877, guid: c8a46fd9a9aab5043b1cc36259ab996b, type: 3}
   m_PrefabInstance: {fileID: 7503160394685842148}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1059051913004302354 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7390994929596908278, guid: c8a46fd9a9aab5043b1cc36259ab996b, type: 3}
+  m_PrefabInstance: {fileID: 7503160394685842148}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d553bcf2e6ea89489830c819f394956, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &9014373228522911091
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using MyGame.ShipSystem;
+using Photon.Pun;
 using UnityEngine;
 namespace MyGame.HandheldableSystem
 {
@@ -11,6 +12,11 @@ namespace MyGame.HandheldableSystem
         {
 
         }
+        public override void ItemUsedPun()
+        {
+            ItemUsed();
+        }
+        [PunRPC]
         public override void ItemUsed()
         {
             base.ItemUsed();

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Setting
+public static class Setting
 {
     public const int maxHealth = 100;
     public const float laodingTime = 1.5f;

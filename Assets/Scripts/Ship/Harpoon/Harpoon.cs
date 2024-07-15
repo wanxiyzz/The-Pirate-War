@@ -37,11 +37,11 @@ public class Harpoon : MonoBehaviourPun, Iinteractable, IPunObservable
     private SpriteRenderer spriteRenderer;
     [SerializeField] Transform interactPoint;
     [SerializeField] Transform itemTrans;
-    private Facehoot facehoot;
+    private Fashhoot facehoot;
 
     private void Awake()
     {
-        facehoot = GetComponentInChildren<Facehoot>();
+        facehoot = GetComponentInChildren<Fashhoot>();
         facehootTrans = facehoot.transform;
         isFire = false;
         tackBack = false;

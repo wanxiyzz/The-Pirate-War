@@ -20,6 +20,7 @@ namespace MyGame.PlayerSystem
         private Vector2 shipPos;
         public bool isBoardShip; //是否在船上
 
+        public Vector3 defaultScale;
         [SerializeField] private bool isInteract;
         [SerializeField] Transform interactTrans;
 
@@ -51,6 +52,7 @@ namespace MyGame.PlayerSystem
             rigi = GetComponent<Rigidbody2D>();
             sortingGroup = GetComponent<SortingGroup>();
             playerBackShip = GetComponent<PlayerBackShip>();
+            defaultScale = transform.localScale;
             if (photonView.IsMine)
                 EventHandler.PlayerInetractive += Interact;
         }
@@ -81,7 +83,6 @@ namespace MyGame.PlayerSystem
                 }
             }
         }
-
         public void Init(Transform shipTrans)
         {
             ShipController shipController = shipTrans.GetComponent<ShipController>();
@@ -267,7 +268,7 @@ namespace MyGame.PlayerSystem
         public void ExitCannon(Transform exitPoint)
         {
             PlayerEnterInteract(exitPoint);
-            transform.localScale = new Vector3(1f, 1f, 1f);
+            transform.localScale = defaultScale;
             sortingGroup.sortingLayerName = "topItem";
         }
         /// <summary>
@@ -278,7 +279,7 @@ namespace MyGame.PlayerSystem
             LeaveShipPun();
             Debug.Log("发射玩家");
             transform.position = firePos;
-            transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
+            transform.localScale = defaultScale;
             sortingGroup.sortingLayerName = "topItem";
             PlayerExitInetract();
             isFireSelf = true;
@@ -329,7 +330,7 @@ namespace MyGame.PlayerSystem
             PlayerExitInetract();
             playerInSeaEff.gameObject.SetActive(false);
             playerAnimation.FirePlayerBackShip();
-            transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
+            transform.localScale = defaultScale;
         }
 
         public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
@@ -338,11 +339,27 @@ namespace MyGame.PlayerSystem
             {
                 stream.SendNext(isMoveing);
                 stream.SendNext(playerPos);
+                stream.SendNext(isBoardShip);
+                stream.SendNext(shipHomeName);
             }
             else
             {
                 isMoveing = (bool)stream.ReceiveNext();
                 playerPos = (PlayerPos)stream.ReceiveNext();
+                isBoardShip = (bool)stream.ReceiveNext();
+                if (shipHomeName == string.Empty && isBoardShip)
+                {
+                    shipHomeName = (string)stream.ReceiveNext();
+                    if (shipHomeName != GameManager.Instance.shipName)
+                    {
+                        gameObject.tag = "Enemy";
+                        gameObject.layer = LayerMask.NameToLayer("Enemy");
+                        isEnemy = true;
+                    }
+                    BoardShipPun(shipHomeName);
+                }
+                else shipHomeName = (string)stream.ReceiveNext();
+
             }
         }
     }
