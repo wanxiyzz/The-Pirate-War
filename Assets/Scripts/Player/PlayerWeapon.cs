@@ -19,11 +19,8 @@ namespace MyGame.PlayerSystem
         public bool IsEnemy => playerController.isEnemy;
         private void OnPlayerInetractive(bool isInteractive)
         {
-            if (photonView.IsMine)
-            {
-                if (isInteractive) PutWeaponPun();
-                else TakeoutWeaponPun();
-            }
+            if (isInteractive) PutWeaponPun();
+            else TakeoutWeaponPun();
         }
 
         protected void Awake()
@@ -127,8 +124,8 @@ namespace MyGame.PlayerSystem
             if (photonView.IsMine)
             {
                 WeaponUI.Instance.DeselectWeaponUI();
-                currentWeapon.gameObject.SetActive(false);
             }
+            currentWeapon.gameObject.SetActive(false);
         }
         public void ExchangeWeaponPun(int index1, int index2)
         {
